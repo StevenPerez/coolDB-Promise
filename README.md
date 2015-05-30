@@ -1,5 +1,5 @@
 # coolDB-Promise
-This is a lightweight library for Client | Server which helps the CRUD actions in memory over objects / data stored in an internal JS Array.
+This is a lightweight library for Client | Server which helps the CRUD actions in memory over objects / data stored in an internal JS Array using Promise.
 
 <br />
 ## Implementation
@@ -154,7 +154,7 @@ coolDB.clone()._result; // [Object, Object, Object, Object]
 Reset to empty Array the internal cooldb Array.
 ```
 function clean(cb)
-returns: Array => [ Object {old: null, new: null, action: "Cleaned"}, ... ]
+returns: Array => [ Object {old: null, new: null, action: "Cleaned"} ]
 ```
 ``` javascript
 coolDB.clean()._result;
