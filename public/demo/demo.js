@@ -1,10 +1,116 @@
 var coolDb = cooldb,
     coolDB = coolDb();
 
-coolDB.changeFeed(function(change){
-    console.log(change);
+/*
+coolDB.changeFeed(function(result){
+    console.log(result);
 });
+*/
 
+// *** Insert Single ***
+coolDB.add({ item: { name: 'Mary' } })
+    .then(function(result) {
+        //console.log(result);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
+
+// *** Insert Multiple ***
+coolDB.add({ item: [{ name: 'Blue' }, { name: 'Trunk' }, { name: 'Blue'}] })
+    .then(function(result) {
+        //console.log(result);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
+
+// *** get ***
+coolDB.get({ key:'name', value: 'Blue'})
+    .then(function(result) {
+        //console.log(result);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
+
+// *** first ***
+coolDB.first({ key:'name', value: 'Blue'})
+    .then(function(result) {
+        //console.log(result);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
+
+coolDB.update({ key: 'name', value: 'Blue', item: { name: 'Pacman' } })
+    .then(function(result) {
+        console.log(result);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
+
+/*
+coolDB.update({ key: 'name', value: 'Blue', item: { name: 'Pacman' }, async: false, ms: 0 }, 
+function (result){
+    console.log(result);
+});
+*/
+           
+// Display Internal cooldb Array
+console.log(coolDB.db().then()._result);
+
+/*
+
+var people = [
+    { name: 'Mary' },
+    { name: 'Blue' },
+    { name: 'Blue' },
+    { name: 'Trunk' }
+];
+
+
+coolDB.del({ key:'name', value: 'Mary' }).then(function(result){
+    console.log(result);
+});
+*/
+
+//console.log( coolDB.first({ key:'name', value: 'Blue' }) );
+// console.log( coolDB.get({ key:'name', value: 'Blue' }) );
+
+/*
+coolDB.first({ key:'name', value: 'Blue', async: true, ms: 0 }, function(result){
+    console.log(result);
+});
+*/
+
+/*
+coolDB.get({ key:'name', value: 'Blue', async: true, ms: 0 }, function(result){
+    console.log(result);
+});
+*/
+
+/*
+coolDB.del({ key:'name', value: 'Mary', async: true, ms: 0 }, function(result){
+    console.log(result);
+});
+*/
+
+//coolDB.add({ item: people, async: true, ms: 0 });
+
+//coolDB.update({ key: 'name', value: 'Blue', item: { name: 'Pacman' } });
+
+/*
+coolDB.update({ key: 'name', value: 'Blue', item: { name: 'Pacman' }, async: false, ms: 0 }, 
+function (result){
+    console.log(result);
+});
+*/
+
+//console.log(coolDB.db());
+//console.log(coolDB.clone());
+//console.log( coolDB.clean() );
 
 //coolDB.add({ item: {name: 'Steven 2'}, async: true, ms: 0 });
 
@@ -53,54 +159,3 @@ console.log('After async del');
 //console.log(coolDB.del({ key: 'name', value: 'Carlos' }));
 
 //console.log(coolDB.update({ key: 'name', value: 'Carlos', item: { name: 'Pacman' } }));
-
-
-var people = [
-    { name: 'Mary' },
-    { name: 'Blue' },
-    { name: 'Blue' },
-    { name: 'Trunk' }
-];
-
-coolDB.add({ item: people });
-
-
-//console.log( coolDB.first({ key:'name', value: 'Blue' }) );
-// console.log( coolDB.get({ key:'name', value: 'Blue' }) );
-
-/*
-coolDB.first({ key:'name', value: 'Blue', async: true, ms: 0 }, function(result){
-    console.log(result);
-});
-*/
-
-/*
-coolDB.get({ key:'name', value: 'Blue', async: true, ms: 0 }, function(result){
-    console.log(result);
-});
-*/
-
-
-coolDB.del({ key:'name', value: 'Mary' });
-
-/*
-coolDB.del({ key:'name', value: 'Mary', async: true, ms: 0 }, function(result){
-    console.log(result);
-});
-*/
-
-//coolDB.add({ item: people, async: true, ms: 0 });
-
-coolDB.update({ key: 'name', value: 'Blue', item: { name: 'Pacman' } });
-
-/*
-coolDB.update({ key: 'name', value: 'Blue', item: { name: 'Pacman' }, async: false, ms: 0 }, 
-function (result){
-    console.log(result);
-});
-*/
-
-//console.log(coolDB.db());
-//console.log(coolDB.clone());
-console.log( coolDB.clean() );
-
