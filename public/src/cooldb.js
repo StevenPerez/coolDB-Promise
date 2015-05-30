@@ -1,5 +1,5 @@
 var cuid        = require('cuid'),
-    clone       = require('clone'),
+    cloneObj       = require('clone'),
     pPolyfill   = require('es6-promise').polyfill(),
     Promise     = require('es6-promise').Promise;
 
@@ -14,7 +14,7 @@ cooldb = function cooldb() {
             
             try {
                 // Clone before changes
-                var currentDest = clone(dest);
+                var currentDest = cloneObj(dest);
                 // Make changes
                 for (var key in source) {
 
@@ -25,7 +25,7 @@ cooldb = function cooldb() {
 
                 }
                 // Clone after changes
-                var updatedDest = clone(dest);
+                var updatedDest = cloneObj(dest);
 
                 resolve({ before: currentDest, after: updatedDest });
                 
@@ -95,6 +95,49 @@ cooldb = function cooldb() {
             
         },
         
+        first: function first(params) {
+            
+            return new Promise(function(resolve, reject) {
+                try {
+                    // >> Validations <<
+
+                    // default param array
+                    params  = params || {};
+
+                    var key   = null,
+                        value = null;
+
+                    // item key prop
+                    if (!params.hasOwnProperty('key'))
+                        throw 'Key => [key] was not found';
+                    else {
+                        if (params.hasOwnProperty('key')) key = params.key;
+                    }
+
+                    // item value prop
+                    if (!params.hasOwnProperty('value') )
+                        throw 'Key => [value] was not found';
+                    else {
+                        if (params.hasOwnProperty('value')) value = params.value;
+                    }
+
+                    var itemFound = cdb.filter(function(item){ return item[key] == value; });
+                    var result = {
+                        item: (itemFound.length > 0) ? itemFound[0] : null,
+                        count: itemFound.length
+                    };
+
+                    resolve(cloneObj(result));
+                    
+                } catch (err) {
+                    var msg = (err.hasOwnProperty('message')) ? err.message : err;
+                    reject(new Error( msg ));
+                }
+                
+            });
+            
+        },
+        
         add: function add(params) {
             
             return new Promise(function(resolve, reject) {
@@ -114,12 +157,12 @@ cooldb = function cooldb() {
                         //>> add Object
                         if (!params.item.hasOwnProperty('cuid')) params.item.cuid = cuid();
                         // Added
-                        cdb.push(clone(params.item));
+                        cdb.push(cloneObj(params.item));
                         // Change Feed
                         if (changeFeedCB != undefined) 
-                        { changeFeedCB({ old: null, new: clone(params.item), action: 'Inserted' }); }
+                        { changeFeedCB({ old: null, new: cloneObj(params.item), action: 'Inserted' }); }
                         // Resolve
-                        resolve([{ old: null, new: clone(params.item), action: 'Inserted' }]);
+                        resolve([{ old: null, new: cloneObj(params.item), action: 'Inserted' }]);
 
                     } else if (Array.isArray(params.item)){
                         //>> Track Additions
@@ -128,14 +171,14 @@ cooldb = function cooldb() {
                         params.item.forEach(function(item) {
                             if (!item.hasOwnProperty('cuid')) item.cuid = cuid();
                             // Added
-                            cdb.push(clone(item));
-                            newItems.push({ old: null, new: clone(item), action: 'Inserted' });
+                            cdb.push(cloneObj(item));
+                            newItems.push({ old: null, new: cloneObj(item), action: 'Inserted' });
                             // Change Feed
                             if (changeFeedCB != undefined) 
-                            { changeFeedCB({ old: null, new: clone(item), action: 'Inserted' }); }
+                            { changeFeedCB({ old: null, new: cloneObj(item), action: 'Inserted' }); }
                         });
                         // Resolve
-                        resolve(clone(newItems));
+                        resolve(cloneObj(newItems));
 
                     } else {
                         throw 'item parameter should correspond to an Object or Array.';
@@ -176,12 +219,12 @@ cooldb = function cooldb() {
                         if (params.hasOwnProperty('value')) value = params.value;
                     }
 
+                    var itemsFound = cdb.filter(function(item){ return item[key] == value; });
+                    
                     //>> Track Deletions
                     var delItems = [];
                     
-                     var itemsFound = cdb.filter(function(item){ return item[key] == value; });
-                    console.log(itemsFound);
-                    for (i = 0; i < itemsFound.length; i++) {
+                    for (var i = 0; i < itemsFound.length; i++) {
 
                         var item    = cdb.filter(function(item){ return item[key] == value; });
                         var index   = cdb.map(function(item){ return item[key]; }).indexOf(value);
@@ -194,12 +237,12 @@ cooldb = function cooldb() {
 
                         // Change Feed
                         if (changeFeedCB != undefined)
-                        { changeFeedCB({ old: clone(itemDeleted), new: null, action: 'Deleted' }); }
+                        { changeFeedCB({ old: cloneObj(itemDeleted), new: null, action: 'Deleted' }); }
 
-                        delItems.push({ old: clone(itemDeleted), new: null, action: 'Deleted' });
+                        delItems.push({ old: cloneObj(itemDeleted), new: null, action: 'Deleted' });
                     }
                 
-                    resolve(clone(delItems));
+                    resolve(cloneObj(delItems));
 
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
@@ -219,78 +262,6 @@ cooldb = function cooldb() {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
                     reject(new Error( msg ));
                 }
-            });
-            
-        },
-        
-        clone: function clone() {
-            return new Promise(function(resolve, reject) {
-                try {
-                    resolve(clone(cdb));
-                } catch (err) {
-                    var msg = (err.hasOwnProperty('message')) ? err.message : err;
-                    reject(new Error( msg ));
-                }
-            });
-        },
-        
-        clean: function clean() {
-            
-            return new Promise(function(resolve, reject) {
-                try {
-                    cdb = [];
-                    // Change Feed
-                    if (changeFeedCB != undefined) 
-                    { changeFeedCB({ old: null, new: null, action: 'Cleaned' }); }
-                    // Resolve
-                    resolve({ old: null, new: null, action: 'Cleaned' });
-                } catch (err) {
-                    var msg = (err.hasOwnProperty('message')) ? err.message : err;
-                    reject(new Error( msg ));
-                }
-            });
-        
-        },
-        
-        first: function first(params) {
-            
-            return new Promise(function(resolve, reject) {
-                try {
-                    // >> Validations <<
-
-                    // default param array
-                    params  = params || {};
-
-                    var key   = null,
-                        value = null;
-
-                    // item key prop
-                    if (!params.hasOwnProperty('key'))
-                        throw 'Key => [key] was not found';
-                    else {
-                        if (params.hasOwnProperty('key')) key = params.key;
-                    }
-
-                    // item value prop
-                    if (!params.hasOwnProperty('value') )
-                        throw 'Key => [value] was not found';
-                    else {
-                        if (params.hasOwnProperty('value')) value = params.value;
-                    }
-
-                    var itemFound = cdb.filter(function(item){ return item[key] == value; });
-                    var result = {
-                        item: (itemFound.length > 0) ? itemFound[0] : null,
-                        count: itemFound.length
-                    };
-
-                    resolve(clone(result));
-                    
-                } catch (err) {
-                    var msg = (err.hasOwnProperty('message')) ? err.message : err;
-                    reject(new Error( msg ));
-                }
-                
             });
             
         },
@@ -339,11 +310,11 @@ cooldb = function cooldb() {
                                                 
                                         // Change Feed
                                         if (changeFeedCB != undefined) 
-                                        { changeFeedCB({ old: clone(result.before), new: clone(result.after), action: 'Updated' }); }
+                                        { changeFeedCB({ old: cloneObj(result.before), new: cloneObj(result.after), action: 'Updated' }); }
                                         // Append to Updated Items
-                                        itemsUpdated.push({ old: clone(result.before), new: clone(result.after), action: 'Updated' });
+                                        itemsUpdated.push({ old: cloneObj(result.before), new: cloneObj(result.after), action: 'Updated' });
                                     })
-                                    .then(function() { resolve(clone(itemsUpdated)) })
+                                    .then(function() { resolve(cloneObj(itemsUpdated)) })
                                     .catch(function(err) { throw err; });
                             });
                         
@@ -359,7 +330,36 @@ cooldb = function cooldb() {
                 
             });
         
-        }
+        },
+
+        clone: function clone() {
+            return new Promise(function(resolve, reject) {
+                try {
+                    resolve(cloneObj(cdb));
+                } catch (err) {
+                    var msg = (err.hasOwnProperty('message')) ? err.message : err;
+                    reject(new Error( msg ));
+                }
+            });
+        },
+        
+        clean: function clean() {
+            
+            return new Promise(function(resolve, reject) {
+                try {
+                    cdb = [];
+                    // Change Feed
+                    if (changeFeedCB != undefined) 
+                    { changeFeedCB({ old: null, new: null, action: 'Cleaned' }); }
+                    // Resolve
+                    resolve([{ old: null, new: null, action: 'Cleaned' }]);
+                } catch (err) {
+                    var msg = (err.hasOwnProperty('message')) ? err.message : err;
+                    reject(new Error( msg ));
+                }
+            });
+        
+        },
         
     };
     

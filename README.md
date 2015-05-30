@@ -1,4 +1,4 @@
-# coolDB
+# coolDB-Promise
 This is a lightweight library for Client | Server which helps the CRUD actions in memory over objects / data stored in an internal JS Array.
 
 <br />
@@ -15,7 +15,7 @@ var cooldb = cooldb,
 
 #### Node
 ```
-npm install cooldb
+npm install cooldb-promise
 ```
 ``` javascript
 var cooldb 	= require('cooldb'),
@@ -26,104 +26,107 @@ var cooldb 	= require('cooldb'),
 ### add
 Add an object / array to the internal cooldb Array. It also includes automatically an unique id to each object through [CUID by Eric Elliot](https://github.com/ericelliott/cuid).
 ```
-function add(params, cb)
-params: { item (Object / Array) | async (true/false) | ms (setTimeout milliseconds) }
-returns: cooldb object
+function add(params)
+params: { item (Object / Array) }
+returns: Array => [ Object {old: null, new: Object, action: "Inserted"}, ... ]
 ```
 ``` javascript
-// >> Add Objects <<
-// Sync
-coolDB.add({ item: {name: 'Steven'} }); // Added => Object {name: "Steven", cuid: "cia78ggu600004j50tjx0bqxy"}
+// *** Insert Single ***
+coolDB.add({ item: { name: 'Mary' } })
+    .then(function(result) {
+        console.log(result);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
 
-// Async
-coolDB.add({ item: {name: 'Steven 2'}, async: true, ms: 500 }, 
-  function(result){
-    console.log(result); // Object {old: null, new: Object, action: "Inserted"}
-});
-
-// >> Add Array <<
-// Sync
-coolDB.add({ item: [{ name: 'Steven' }, { name: 'Steven 2' }] });
-
-// Async
-coolDB.add({ item: [{ name: 'Steven' }, { name: 'Steven 2' }], async: true, ms: 0 }, 
-  function(result){
-    console.log(result); 
-    // Object {old: null, new: Object, action: "Inserted"} 
-    // Object {old: null, new: Object, action: "Inserted"}
-});
+// *** Insert Multiple ***
+coolDB.add({ item: [{ name: 'Blue' }, { name: 'Trunk' }, { name: 'Blue'}] })
+    .then(function(result) {
+        console.log(result);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
 
 ```
 ### del
 Delete the items where a key + value match with the items stored inside the cooldb Array
 ```
-function del(params, cb)
-params: { key (Property name) | value (Property value) | async (true/false) | ms (setTimeout milliseconds) }
-returns: cooldb object
+function del(params)
+params: { key (Property name) | value (Property value) }
+returns: Array => [ Object {old: Object, new: null, action: "Deleted"}, ... ]
 ```
 ``` javascript
-// Sync
-coolDB.del({ key:'name', value: 'Mary' }); // Delete all items where name = Mary
-
-// Async
-coolDB.del({ key:'name', value: 'Mary', async: true, ms: 0 }, 
-  function(result){
-    console.log(result); // Object {old: Object, new: null, action: "Deleted"}
-});
+// *** Delete Single & Multiple ***
+coolDB.del({ key: 'name', value: 'Pacman' })
+    .then(function(result) {
+        console.log(result);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
 
 ```
 ### update
 Update the items where a key + value match with the items stored inside the cooldb Array
 ```
 function update(params, cb)
-params: { key (Property name) | value (Property value) | item (New Property values) |async (true/false) | ms (setTimeout milliseconds) }
-returns: cooldb object
+params: { key (Property name) | value (Property value) | item (New Property values) }
+returns: Array => [ Object {old: Object, new: Object, action: "Updated"}, ... ]
 ```
 ``` javascript
-// Sync
-coolDB.update({ key: 'name', value: 'Blue', item: { name: 'Pacman' } }); // Update name = Pacman where name = Blue
+// *** Update Single ***
+coolDB.update({ key: 'name', value: 'Mary', item: { name: 'Pingui' } })
+    .then(function(result) {
+        console.log(result);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
 
-// Async
-coolDB.update({ key: 'name', value: 'Blue', item: { name: 'Pacman' }, async: false, ms: 0 }, 
-  function (result){
-    console.log(result); // Object {old: Object, new: Object, action: "Updated"}
-});
+// *** Update Multiple ***
+coolDB.update({ key: 'name', value: 'Blue', item: { name: 'Pacman' } })
+    .then(function(result) {
+        console.log(result);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
 
 ```
 ### first
 Return the first item where a key + value match with the items stored inside the cooldb Array
 ```
 function first(params, cb)
-params: { key (Property name) | value (Property value) | async (true/false) | ms (setTimeout milliseconds) }
+params: { key (Property name) | value (Property value) }
 returns: Object { item (First object found) | count (Number of objects found) }
 ```
 ``` javascript
-// Sync
-coolDB.first({ key:'name', value: 'Blue' }); // Object {item: Object, count: 1} 
-
-// Async
-coolDB.first({ key:'name', value: 'Blue', async: true, ms: 0 }, 
-  function(result){
-    console.log(result); // Object {item: Object, count: 1}
-});
+coolDB.first({ key:'name', value: 'Blue'})
+    .then(function(result) {
+        console.log(result);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
 
 ```
 ### get
 Get the items where a key + value match with the items stored inside the cooldb Array
 ```
 function get(params, cb)
-params: { key (Property name) | value (Property value) | async (true/false) | ms (setTimeout milliseconds) }
+params: { key (Property name) | value (Property value) }
 returns: Object { items (Array of objects found) | count (Number of objects found) }
 ```
 ``` javascript
-// Sync
-coolDB.get({ key:'name', value: 'Blue' }); // Object {items: Array[1], count: 1}
-
-// Async
-coolDB.get({ key:'name', value: 'Blue', async: true, ms: 0 }, 
-  function(result){
-    console.log(result); // Object {items: Array[2], count: 2}
-});
+coolDB.get({ key:'name', value: 'Blue'})
+    .then(function(result) {
+        console.log(result);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
 
 ```
 ### db
@@ -134,7 +137,7 @@ returns: Array
 ```
 ``` javascript
 // Sync
-coolDB.db(); // [Object, Object, Object, Object]
+coolDB.db()._result; // [Object, Object, Object, Object]
 
 ```
 ### clone
@@ -144,23 +147,21 @@ function clone()
 returns: Array
 ```
 ``` javascript
-// Sync
-coolDB.clone(); // [Object, Object, Object, Object]
+coolDB.clone()._result; // [Object, Object, Object, Object]
 
 ```
 ### clean
 Reset to empty Array the internal cooldb Array.
 ```
 function clean(cb)
-returns: cooldb object
+returns: Array => [ Object {old: null, new: null, action: "Cleaned"}, ... ]
 ```
 ``` javascript
-// Sync
-coolDB.clean(); // Object {changeFeed: function, get: function, add: function, del: function, db: function…}
+coolDB.clean()._result;
 
 ```
 ### changeFeed
-Subscribe to the internal cooldb Array's CRUD changes.
+Subscribe to the internal cooldb Array's CRUD change events.
 ```
 function changeFeed(fn)
 returns: Object
