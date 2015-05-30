@@ -2715,6 +2715,7 @@ cooldb = function cooldb() {
                     }
 
                     var itemFound = cdb.filter(function(item){ return item[key] == value; });
+                    
                     var result = {
                         items: itemFound,
                         count: itemFound.length
@@ -2755,23 +2756,23 @@ cooldb = function cooldb() {
                         if (changeFeedCB != undefined) 
                         { changeFeedCB({ old: null, new: clone(params.item), action: 'Inserted' }); }
                         // Resolve
-                        resolve({ old: null, new: clone(params.item), action: 'Inserted' });
+                        resolve([{ old: null, new: clone(params.item), action: 'Inserted' }]);
 
                     } else if (Array.isArray(params.item)){
-                        //>> Record Changes
+                        //>> Track Additions
                         var newItems = [];
                         //>> add Array
                         params.item.forEach(function(item) {
                             if (!item.hasOwnProperty('cuid')) item.cuid = cuid();
                             // Added
                             cdb.push(clone(item));
-                            newItems.push(clone(item));
+                            newItems.push({ old: null, new: clone(item), action: 'Inserted' });
                             // Change Feed
                             if (changeFeedCB != undefined) 
                             { changeFeedCB({ old: null, new: clone(item), action: 'Inserted' }); }
                         });
                         // Resolve
-                        resolve({ old: null, new: clone(newItems), action: 'Inserted' });
+                        resolve(clone(newItems));
 
                     } else {
                         throw 'item parameter should correspond to an Object or Array.';
@@ -2786,11 +2787,12 @@ cooldb = function cooldb() {
         },
         
         del: function del(params) {
-            // >> Validations <<
+            
             var $this = this;
             
             return new Promise(function(resolve, reject) {
                 try {
+                    // >> Validations <<
                     // default param array
                     params  = params || {};
 
@@ -2811,30 +2813,30 @@ cooldb = function cooldb() {
                         if (params.hasOwnProperty('value')) value = params.value;
                     }
 
-                    $this.get({ key: key, value: value })
-                        .then(function(itemsFound){
+                    //>> Track Deletions
+                    var delItems = [];
                     
-                            for (i = 0; i < itemsFound.count; i++) {
+                     var itemsFound = cdb.filter(function(item){ return item[key] == value; });
+                    console.log(itemsFound);
+                    for (i = 0; i < itemsFound.length; i++) {
 
-                                var item    = cdb.filter(function(item){ return item[key] == value; });
-                                var index   = cdb.map(function(item){ return item[key]; }).indexOf(value);
+                        var item    = cdb.filter(function(item){ return item[key] == value; });
+                        var index   = cdb.map(function(item){ return item[key]; }).indexOf(value);
 
-                                if (index >= 0) {
-                                    cdb.splice(index, 1); 
-                                }
-                                
-                                var itemDeleted = (Array.isArray(item)) ? item[0] : item;
+                        if (index >= 0) {
+                            cdb.splice(index, 1); 
+                        }
 
-                                // Change Feed
-                                if (changeFeedCB != undefined)
-                                { changeFeedCB({ old: clone(itemDeleted), new: null, action: 'Deleted' }); }
-                                // Resolve
-                                resolve({ old: clone(itemDeleted), new: null, action: 'Deleted' });
-                            }
-                        
-                        })
-                        .catch(function(err) { throw err; } );
-                    
+                        var itemDeleted = (Array.isArray(item)) ? item[0] : item;
+
+                        // Change Feed
+                        if (changeFeedCB != undefined)
+                        { changeFeedCB({ old: clone(itemDeleted), new: null, action: 'Deleted' }); }
+
+                        delItems.push({ old: clone(itemDeleted), new: null, action: 'Deleted' });
+                    }
+                
+                    resolve(clone(delItems));
 
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
@@ -2966,28 +2968,26 @@ cooldb = function cooldb() {
                     
                     $this.get({ key: key, value: value})
                         .then(function(itemsFound) {
-                            console.log(itemsFound);
+                            
                             itemsFound.items.forEach(function(dbItem){
-                                    
-                                $this.updateProps(params.item, dbItem)
+                                
+                                updateProps(params.item, dbItem)
                                     .then(function(result){
-                                        console.log(dbItem);
-                                        console.log(result);
+                                                
                                         // Change Feed
                                         if (changeFeedCB != undefined) 
                                         { changeFeedCB({ old: clone(result.before), new: clone(result.after), action: 'Updated' }); }
                                         // Append to Updated Items
                                         itemsUpdated.push({ old: clone(result.before), new: clone(result.after), action: 'Updated' });
                                     })
+                                    .then(function() { resolve(clone(itemsUpdated)) })
                                     .catch(function(err) { throw err; });
-
                             });
                         
                         })
                         .catch(function(err) { throw err; });
                     
-                    // Resolve
-                    resolve(clone(itemsUpdated));
+                    
 
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
@@ -3003,5 +3003,5 @@ cooldb = function cooldb() {
 };
 
 module.exports = cooldb;
-}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_a42ed701.js","/")
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_7294f142.js","/")
 },{"buffer":4,"clone":1,"cuid":2,"es6-promise":3,"oMfpAn":7}]},{},[8])

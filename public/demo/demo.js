@@ -7,13 +7,14 @@ coolDB.changeFeed(function(result){
 });
 */
 
+
 // *** Insert Single ***
 coolDB.add({ item: { name: 'Mary' } })
     .then(function(result) {
         //console.log(result);
     })
     .catch(function(err) {
-        console.log(err);
+        //console.log(err);
     });
 
 // *** Insert Multiple ***
@@ -43,9 +44,28 @@ coolDB.first({ key:'name', value: 'Blue'})
         console.log(err);
     });
 
+// *** Update Single ***
+coolDB.update({ key: 'name', value: 'Mary', item: { name: 'Pingui' } })
+    .then(function(result) {
+        //console.log(result);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
+
+// *** Update Multiple ***
 coolDB.update({ key: 'name', value: 'Blue', item: { name: 'Pacman' } })
     .then(function(result) {
-        console.log(result);
+        //console.log(result);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
+
+// *** Delete Single / Multiple ***
+coolDB.del({ key: 'name', value: 'Pacman' })
+    .then(function(result) {
+        //console.log(result);
     })
     .catch(function(err) {
         console.log(err);
