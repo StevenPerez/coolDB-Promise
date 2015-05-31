@@ -18,7 +18,7 @@ var cooldb = cooldb,
 npm install cooldb-promise
 ```
 ``` javascript
-var cooldb 	= require('cooldb'),
+var cooldb 	= require('cooldb-promise'),
 	coolDB 	= cooldb();
 ```
 <br />
