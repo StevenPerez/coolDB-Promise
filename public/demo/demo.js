@@ -5,6 +5,7 @@ coolDB.changeFeed(function(result){
     console.log(result);
 });
 
+/*
 // *** Insert Single ***
 coolDB.add({ item: { name: 'Mary' } })
     .then(function(result) {
@@ -74,6 +75,7 @@ coolDB.del({ key: 'name', value: 'Pacman' })
 
 // Clone
 console.log( coolDB.clone()._result );
+*/
 
 // Clean
 // console.log( coolDB.clean()._result );

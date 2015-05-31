@@ -1,169 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-var clone = (function() {
-'use strict';
-
-/**
- * Clones (copies) an Object using deep copying.
- *
- * This function supports circular references by default, but if you are certain
- * there are no circular references in your object, you can save some CPU time
- * by calling clone(obj, false).
- *
- * Caution: if `circular` is false and `parent` contains circular references,
- * your program may enter an infinite loop and crash.
- *
- * @param `parent` - the object to be cloned
- * @param `circular` - set to true if the object to be cloned may contain
- *    circular references. (optional - true by default)
- * @param `depth` - set to a number if the object is only to be cloned to
- *    a particular depth. (optional - defaults to Infinity)
- * @param `prototype` - sets the prototype to be used when cloning an object.
- *    (optional - defaults to parent prototype).
-*/
-function clone(parent, circular, depth, prototype) {
-  var filter;
-  if (typeof circular === 'object') {
-    depth = circular.depth;
-    prototype = circular.prototype;
-    filter = circular.filter;
-    circular = circular.circular
-  }
-  // maintain two arrays for circular references, where corresponding parents
-  // and children have the same index
-  var allParents = [];
-  var allChildren = [];
-
-  var useBuffer = typeof Buffer != 'undefined';
-
-  if (typeof circular == 'undefined')
-    circular = true;
-
-  if (typeof depth == 'undefined')
-    depth = Infinity;
-
-  // recurse this function so we don't reset allParents and allChildren
-  function _clone(parent, depth) {
-    // cloning null always returns null
-    if (parent === null)
-      return null;
-
-    if (depth == 0)
-      return parent;
-
-    var child;
-    var proto;
-    if (typeof parent != 'object') {
-      return parent;
-    }
-
-    if (clone.__isArray(parent)) {
-      child = [];
-    } else if (clone.__isRegExp(parent)) {
-      child = new RegExp(parent.source, __getRegExpFlags(parent));
-      if (parent.lastIndex) child.lastIndex = parent.lastIndex;
-    } else if (clone.__isDate(parent)) {
-      child = new Date(parent.getTime());
-    } else if (useBuffer && Buffer.isBuffer(parent)) {
-      child = new Buffer(parent.length);
-      parent.copy(child);
-      return child;
-    } else {
-      if (typeof prototype == 'undefined') {
-        proto = Object.getPrototypeOf(parent);
-        child = Object.create(proto);
-      }
-      else {
-        child = Object.create(prototype);
-        proto = prototype;
-      }
-    }
-
-    if (circular) {
-      var index = allParents.indexOf(parent);
-
-      if (index != -1) {
-        return allChildren[index];
-      }
-      allParents.push(parent);
-      allChildren.push(child);
-    }
-
-    for (var i in parent) {
-      var attrs;
-      if (proto) {
-        attrs = Object.getOwnPropertyDescriptor(proto, i);
-      }
-
-      if (attrs && attrs.set == null) {
-        continue;
-      }
-      child[i] = _clone(parent[i], depth - 1);
-    }
-
-    return child;
-  }
-
-  return _clone(parent, depth);
-}
-
-/**
- * Simple flat clone using prototype, accepts only objects, usefull for property
- * override on FLAT configuration object (no nested props).
- *
- * USE WITH CAUTION! This may not behave as you wish if you do not know how this
- * works.
- */
-clone.clonePrototype = function clonePrototype(parent) {
-  if (parent === null)
-    return null;
-
-  var c = function () {};
-  c.prototype = parent;
-  return new c();
-};
-
-// private utility functions
-
-function __objToStr(o) {
-  return Object.prototype.toString.call(o);
-};
-clone.__objToStr = __objToStr;
-
-function __isDate(o) {
-  return typeof o === 'object' && __objToStr(o) === '[object Date]';
-};
-clone.__isDate = __isDate;
-
-function __isArray(o) {
-  return typeof o === 'object' && __objToStr(o) === '[object Array]';
-};
-clone.__isArray = __isArray;
-
-function __isRegExp(o) {
-  return typeof o === 'object' && __objToStr(o) === '[object RegExp]';
-};
-clone.__isRegExp = __isRegExp;
-
-function __getRegExpFlags(re) {
-  var flags = '';
-  if (re.global) flags += 'g';
-  if (re.ignoreCase) flags += 'i';
-  if (re.multiline) flags += 'm';
-  return flags;
-};
-clone.__getRegExpFlags = __getRegExpFlags;
-
-return clone;
-})();
-
-if (typeof module === 'object' && module.exports) {
-  module.exports = clone;
-}
-
-}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/clone/clone.js","/../../node_modules/clone")
-},{"buffer":4,"oMfpAn":7}],2:[function(require,module,exports){
-(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /**
  * cuid.js
  * Collision-resistant UID generator for browsers and node.
@@ -276,7 +112,7 @@ if (typeof module === 'object' && module.exports) {
 }(this.applitude || this));
 
 }).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/cuid/dist/browser-cuid.js","/../../node_modules/cuid/dist")
-},{"buffer":4,"oMfpAn":7}],3:[function(require,module,exports){
+},{"buffer":3,"oMfpAn":6}],2:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*!
  * @overview es6-promise - a tiny implementation of Promises/A+.
@@ -1237,7 +1073,7 @@ if (typeof module === 'object' && module.exports) {
 
 
 }).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/es6-promise/dist/es6-promise.js","/../../node_modules/es6-promise/dist")
-},{"buffer":4,"oMfpAn":7}],4:[function(require,module,exports){
+},{"buffer":3,"oMfpAn":6}],3:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*!
  * The buffer module from node.js, for the browser.
@@ -2350,7 +2186,7 @@ function assert (test, message) {
 }
 
 }).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/index.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer")
-},{"base64-js":5,"buffer":4,"ieee754":6,"oMfpAn":7}],5:[function(require,module,exports){
+},{"base64-js":4,"buffer":3,"ieee754":5,"oMfpAn":6}],4:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
@@ -2478,7 +2314,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
 }).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib/b64.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib")
-},{"buffer":4,"oMfpAn":7}],6:[function(require,module,exports){
+},{"buffer":3,"oMfpAn":6}],5:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 exports.read = function(buffer, offset, isLE, mLen, nBytes) {
   var e, m,
@@ -2566,7 +2402,7 @@ exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
 };
 
 }).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/ieee754/index.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/ieee754")
-},{"buffer":4,"oMfpAn":7}],7:[function(require,module,exports){
+},{"buffer":3,"oMfpAn":6}],6:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 // shim for using process in browser
 
@@ -2633,10 +2469,9 @@ process.chdir = function (dir) {
 };
 
 }).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/process/browser.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/process")
-},{"buffer":4,"oMfpAn":7}],8:[function(require,module,exports){
+},{"buffer":3,"oMfpAn":6}],7:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var cuid        = require('cuid'),
-    cloneObj       = require('clone'),
     pPolyfill   = require('es6-promise').polyfill(),
     Promise     = require('es6-promise').Promise;
 
@@ -2651,7 +2486,7 @@ cooldb = function cooldb() {
             
             try {
                 // Clone before changes
-                var currentDest = cloneObj(dest);
+                var currentDest = JSON.parse(JSON.stringify(dest));
                 // Make changes
                 for (var key in source) {
 
@@ -2662,7 +2497,7 @@ cooldb = function cooldb() {
 
                 }
                 // Clone after changes
-                var updatedDest = cloneObj(dest);
+                var updatedDest = JSON.parse(JSON.stringify(dest));
 
                 resolve({ before: currentDest, after: updatedDest });
                 
@@ -2764,7 +2599,7 @@ cooldb = function cooldb() {
                         count: itemFound.length
                     };
 
-                    resolve(cloneObj(result));
+                    resolve(result);
                     
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
@@ -2794,12 +2629,12 @@ cooldb = function cooldb() {
                         //>> add Object
                         if (!params.item.hasOwnProperty('cuid')) params.item.cuid = cuid();
                         // Added
-                        cdb.push(cloneObj(params.item));
+                        cdb.push(params.item);
                         // Change Feed
                         if (changeFeedCB != undefined) 
-                        { changeFeedCB({ old: null, new: cloneObj(params.item), action: 'Inserted' }); }
+                        { changeFeedCB({ old: null, new: params.item, action: 'Inserted' }); }
                         // Resolve
-                        resolve([{ old: null, new: cloneObj(params.item), action: 'Inserted' }]);
+                        resolve([{ old: null, new: params.item, action: 'Inserted' }]);
 
                     } else if (Array.isArray(params.item)){
                         //>> Track Additions
@@ -2808,14 +2643,14 @@ cooldb = function cooldb() {
                         params.item.forEach(function(item) {
                             if (!item.hasOwnProperty('cuid')) item.cuid = cuid();
                             // Added
-                            cdb.push(cloneObj(item));
-                            newItems.push({ old: null, new: cloneObj(item), action: 'Inserted' });
+                            cdb.push(item);
+                            newItems.push({ old: null, new: item, action: 'Inserted' });
                             // Change Feed
                             if (changeFeedCB != undefined) 
-                            { changeFeedCB({ old: null, new: cloneObj(item), action: 'Inserted' }); }
+                            { changeFeedCB({ old: null, new: item, action: 'Inserted' }); }
                         });
                         // Resolve
-                        resolve(cloneObj(newItems));
+                        resolve(newItems);
 
                     } else {
                         throw 'item parameter should correspond to an Object or Array.';
@@ -2827,6 +2662,8 @@ cooldb = function cooldb() {
                 }
                 
             });
+            
+            return this;
         },
         
         del: function del(params) {
@@ -2874,12 +2711,12 @@ cooldb = function cooldb() {
 
                         // Change Feed
                         if (changeFeedCB != undefined)
-                        { changeFeedCB({ old: cloneObj(itemDeleted), new: null, action: 'Deleted' }); }
+                        { changeFeedCB({ old: itemDeleted, new: null, action: 'Deleted' }); }
 
-                        delItems.push({ old: cloneObj(itemDeleted), new: null, action: 'Deleted' });
+                        delItems.push({ old: itemDeleted, new: null, action: 'Deleted' });
                     }
                 
-                    resolve(cloneObj(delItems));
+                    resolve(delItems);
 
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
@@ -2888,6 +2725,7 @@ cooldb = function cooldb() {
                 
             });
             
+            return this;
         },
         
         db: function db() {
@@ -2901,6 +2739,7 @@ cooldb = function cooldb() {
                 }
             });
             
+            return this;
         },
         
         update: function update(params) {
@@ -2947,11 +2786,11 @@ cooldb = function cooldb() {
                                                 
                                         // Change Feed
                                         if (changeFeedCB != undefined) 
-                                        { changeFeedCB({ old: cloneObj(result.before), new: cloneObj(result.after), action: 'Updated' }); }
+                                        { changeFeedCB({ old: result.before, new: result.after, action: 'Updated' }); }
                                         // Append to Updated Items
-                                        itemsUpdated.push({ old: cloneObj(result.before), new: cloneObj(result.after), action: 'Updated' });
+                                        itemsUpdated.push({ old: result.before, new: result.after, action: 'Updated' });
                                     })
-                                    .then(function() { resolve(cloneObj(itemsUpdated)) })
+                                    .then(function() { resolve(itemsUpdated) })
                                     .catch(function(err) { throw err; });
                             });
                         
@@ -2972,7 +2811,7 @@ cooldb = function cooldb() {
         clone: function clone() {
             return new Promise(function(resolve, reject) {
                 try {
-                    resolve(cloneObj(cdb));
+                    resolve(JSON.parse(JSON.stringify(cdb)));
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
                     reject(new Error( msg ));
@@ -3003,5 +2842,5 @@ cooldb = function cooldb() {
 };
 
 module.exports = cooldb;
-}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_a816698d.js","/")
-},{"buffer":4,"clone":1,"cuid":2,"es6-promise":3,"oMfpAn":7}]},{},[8])
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_3067af60.js","/")
+},{"buffer":3,"cuid":1,"es6-promise":2,"oMfpAn":6}]},{},[7])

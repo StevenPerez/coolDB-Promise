@@ -1,5 +1,4 @@
 var cuid        = require('cuid'),
-    cloneObj       = require('clone'),
     pPolyfill   = require('es6-promise').polyfill(),
     Promise     = require('es6-promise').Promise;
 
@@ -14,7 +13,7 @@ cooldb = function cooldb() {
             
             try {
                 // Clone before changes
-                var currentDest = cloneObj(dest);
+                var currentDest = JSON.parse(JSON.stringify(dest));
                 // Make changes
                 for (var key in source) {
 
@@ -25,7 +24,7 @@ cooldb = function cooldb() {
 
                 }
                 // Clone after changes
-                var updatedDest = cloneObj(dest);
+                var updatedDest = JSON.parse(JSON.stringify(dest));
 
                 resolve({ before: currentDest, after: updatedDest });
                 
@@ -127,7 +126,7 @@ cooldb = function cooldb() {
                         count: itemFound.length
                     };
 
-                    resolve(cloneObj(result));
+                    resolve(result);
                     
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
@@ -157,12 +156,12 @@ cooldb = function cooldb() {
                         //>> add Object
                         if (!params.item.hasOwnProperty('cuid')) params.item.cuid = cuid();
                         // Added
-                        cdb.push(cloneObj(params.item));
+                        cdb.push(params.item);
                         // Change Feed
                         if (changeFeedCB != undefined) 
-                        { changeFeedCB({ old: null, new: cloneObj(params.item), action: 'Inserted' }); }
+                        { changeFeedCB({ old: null, new: params.item, action: 'Inserted' }); }
                         // Resolve
-                        resolve([{ old: null, new: cloneObj(params.item), action: 'Inserted' }]);
+                        resolve([{ old: null, new: params.item, action: 'Inserted' }]);
 
                     } else if (Array.isArray(params.item)){
                         //>> Track Additions
@@ -171,14 +170,14 @@ cooldb = function cooldb() {
                         params.item.forEach(function(item) {
                             if (!item.hasOwnProperty('cuid')) item.cuid = cuid();
                             // Added
-                            cdb.push(cloneObj(item));
-                            newItems.push({ old: null, new: cloneObj(item), action: 'Inserted' });
+                            cdb.push(item);
+                            newItems.push({ old: null, new: item, action: 'Inserted' });
                             // Change Feed
                             if (changeFeedCB != undefined) 
-                            { changeFeedCB({ old: null, new: cloneObj(item), action: 'Inserted' }); }
+                            { changeFeedCB({ old: null, new: item, action: 'Inserted' }); }
                         });
                         // Resolve
-                        resolve(cloneObj(newItems));
+                        resolve(newItems);
 
                     } else {
                         throw 'item parameter should correspond to an Object or Array.';
@@ -190,6 +189,8 @@ cooldb = function cooldb() {
                 }
                 
             });
+            
+            return this;
         },
         
         del: function del(params) {
@@ -237,12 +238,12 @@ cooldb = function cooldb() {
 
                         // Change Feed
                         if (changeFeedCB != undefined)
-                        { changeFeedCB({ old: cloneObj(itemDeleted), new: null, action: 'Deleted' }); }
+                        { changeFeedCB({ old: itemDeleted, new: null, action: 'Deleted' }); }
 
-                        delItems.push({ old: cloneObj(itemDeleted), new: null, action: 'Deleted' });
+                        delItems.push({ old: itemDeleted, new: null, action: 'Deleted' });
                     }
                 
-                    resolve(cloneObj(delItems));
+                    resolve(delItems);
 
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
@@ -251,6 +252,7 @@ cooldb = function cooldb() {
                 
             });
             
+            return this;
         },
         
         db: function db() {
@@ -264,6 +266,7 @@ cooldb = function cooldb() {
                 }
             });
             
+            return this;
         },
         
         update: function update(params) {
@@ -310,11 +313,11 @@ cooldb = function cooldb() {
                                                 
                                         // Change Feed
                                         if (changeFeedCB != undefined) 
-                                        { changeFeedCB({ old: cloneObj(result.before), new: cloneObj(result.after), action: 'Updated' }); }
+                                        { changeFeedCB({ old: result.before, new: result.after, action: 'Updated' }); }
                                         // Append to Updated Items
-                                        itemsUpdated.push({ old: cloneObj(result.before), new: cloneObj(result.after), action: 'Updated' });
+                                        itemsUpdated.push({ old: result.before, new: result.after, action: 'Updated' });
                                     })
-                                    .then(function() { resolve(cloneObj(itemsUpdated)) })
+                                    .then(function() { resolve(itemsUpdated) })
                                     .catch(function(err) { throw err; });
                             });
                         
@@ -335,7 +338,7 @@ cooldb = function cooldb() {
         clone: function clone() {
             return new Promise(function(resolve, reject) {
                 try {
-                    resolve(cloneObj(cdb));
+                    resolve(JSON.parse(JSON.stringify(cdb)));
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
                     reject(new Error( msg ));
