@@ -2631,8 +2631,11 @@ cooldb = function cooldb() {
                         // Added
                         cdb.push(params.item);
                         // Change Feed
-                        if (changeFeedCB != undefined) 
-                        { changeFeedCB({ old: null, new: params.item, action: 'Inserted' }); }
+                        if (changeFeedCB != undefined) { 
+                            setTimeout(function() {
+                                changeFeedCB({ old: null, new: params.item, action: 'Inserted' }); 
+                            }, 0);
+                        }
                         // Resolve
                         resolve([{ old: null, new: params.item, action: 'Inserted' }]);
 
@@ -2646,8 +2649,11 @@ cooldb = function cooldb() {
                             cdb.push(item);
                             newItems.push({ old: null, new: item, action: 'Inserted' });
                             // Change Feed
-                            if (changeFeedCB != undefined) 
-                            { changeFeedCB({ old: null, new: item, action: 'Inserted' }); }
+                            if (changeFeedCB != undefined) {
+                                setTimeout(function() {
+                                    changeFeedCB({ old: null, new: item, action: 'Inserted' }); 
+                                }, 0);
+                            }
                         });
                         // Resolve
                         resolve(newItems);
@@ -2710,8 +2716,11 @@ cooldb = function cooldb() {
                         var itemDeleted = (Array.isArray(item)) ? item[0] : item;
 
                         // Change Feed
-                        if (changeFeedCB != undefined)
-                        { changeFeedCB({ old: itemDeleted, new: null, action: 'Deleted' }); }
+                        if (changeFeedCB != undefined) { 
+                            setTimeout(function() {
+                                changeFeedCB({ old: itemDeleted, new: null, action: 'Deleted' }); 
+                            }, 0);
+                        }
 
                         delItems.push({ old: itemDeleted, new: null, action: 'Deleted' });
                     }
@@ -2785,8 +2794,11 @@ cooldb = function cooldb() {
                                     .then(function(result){
                                                 
                                         // Change Feed
-                                        if (changeFeedCB != undefined) 
-                                        { changeFeedCB({ old: result.before, new: result.after, action: 'Updated' }); }
+                                        if (changeFeedCB != undefined) { 
+                                            setTimeout(function() {
+                                                changeFeedCB({ old: result.before, new: result.after, action: 'Updated' }); 
+                                            }, 0);
+                                        }
                                         // Append to Updated Items
                                         itemsUpdated.push({ old: result.before, new: result.after, action: 'Updated' });
                                     })
@@ -2825,8 +2837,11 @@ cooldb = function cooldb() {
                 try {
                     cdb = [];
                     // Change Feed
-                    if (changeFeedCB != undefined) 
-                    { changeFeedCB({ old: null, new: null, action: 'Cleaned' }); }
+                    if (changeFeedCB != undefined) { 
+                        setTimeout(function() {
+                            changeFeedCB({ old: null, new: null, action: 'Cleaned' }); 
+                        }, 0);
+                    }
                     // Resolve
                     resolve([{ old: null, new: null, action: 'Cleaned' }]);
                 } catch (err) {
@@ -2842,5 +2857,5 @@ cooldb = function cooldb() {
 };
 
 module.exports = cooldb;
-}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_3067af60.js","/")
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_6130439b.js","/")
 },{"buffer":3,"cuid":1,"es6-promise":2,"oMfpAn":6}]},{},[7])
