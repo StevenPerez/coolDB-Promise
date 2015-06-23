@@ -1,12 +1,20 @@
 var cuid        = require('cuid'),
     pPolyfill   = require('es6-promise').polyfill(),
-    Promise     = require('es6-promise').Promise;
+    Promise     = require('es6-promise').Promise,
+    lazy        = require('lazy.js'),
+    copy        = require('deepcopy');
 
 cooldb = function cooldb() {
-    
-    var cdb = [];
-    var changeFeedCB = undefined;
-        
+    // Production Array
+    var cdb             = [];
+    // Production Change Feed 
+    var changeFeedCB    = undefined;
+    // History Change Feed
+    var changeFeedHCB   = undefined;
+    // History
+    var cdbHistory      = [];
+    var bufferHistory   = 0;
+
     updateProps : function updateProps(source, dest) {
 
         return new Promise(function(resolve, reject){
@@ -37,6 +45,81 @@ cooldb = function cooldb() {
         
 	}
     
+    addHistory: function addHistory(params) {
+            
+        return new Promise(function(resolve, reject) {
+
+            try {
+                // >> Validations <<
+
+                // default param array
+                params  = params || {};
+
+                // item key prop
+                if (!params.hasOwnProperty('item'))
+                    throw '[History] -> Key => [item] was not found';
+
+                // Check history buffer
+                if (cdbHistory.length > bufferHistory) {
+                    lazy(cdbHistory).shift();
+                }
+                
+                // add
+                if (!Array.isArray(params.item)) {
+                    console.log('NOT ARRAY');
+                    //>> add hcuid Property
+                    if (!params.item.hasOwnProperty('hcuid')) params.item.hcuid = cuid();
+
+                    // Added
+                    cdbHistory.push({ item: params.item, action: 'Inserted', isArray: false });
+
+                    // Change Feed
+                    if (changeFeedHCB != undefined) { 
+                        setTimeout(function() {
+                            changeFeedHCB({ item: params.item, action: 'Inserted', isArray: true }); 
+                        }, 0);
+                    }
+
+                    // Job Done !
+                    resolve({ item: params.item, action: 'Inserted', isArray: false });
+
+                } else if (Array.isArray(params.item)){
+                    console.log('ARRAY');
+                    //>> Track Additions
+                    var newItems = [];
+                    //>> add Array
+                    params.item.forEach(function(item) {
+                        if (!item.hasOwnProperty('hcuid')) item.hcuid = cuid();
+                        // Added
+                        newItems.push(item);
+                    });
+                    
+                    // Added
+                    cdbHistory.push({ item: newItems, action: 'Inserted', isArray: true });
+                    
+                    // Change Feed
+                    if (changeFeedHCB != undefined) { 
+                        setTimeout(function() {
+                            changeFeedHCB({ item: newItems, action: 'Inserted', isArray: true }); 
+                        }, 0);
+                    }
+                    // Job Done !
+                    resolve({ item: newItems, action: 'Inserted', isArray: true });
+
+                } else {
+                    throw '[History] -> item parameter should correspond to an Object or Array.';
+                }
+
+            } catch (err) {
+                var msg = (err.hasOwnProperty('message')) ? err.message : err;
+                reject(new Error( msg ));
+            }
+
+        });
+
+        return this;
+    }
+    
     return {
         
         changeFeed: function changeFeed(fn) {
@@ -45,7 +128,7 @@ cooldb = function cooldb() {
             if (typeof fn === 'function') { 
                 changeFeedCB = fn; 
             } else {
-                throw 'Invalid changeFeed function.';
+                throw 'Invalid change Feed function.';
             }
                 
 		},
@@ -163,6 +246,12 @@ cooldb = function cooldb() {
                                 changeFeedCB({ old: null, new: params.item, action: 'Inserted' }); 
                             }, 0);
                         }
+                        // History
+                        if (bufferHistory > 0 ) { 
+                            setTimeout(function() {
+                                addHistory({ item: copy(params.item) }); 
+                            }, 0);
+                        }
                         // Resolve
                         resolve([{ old: null, new: params.item, action: 'Inserted' }]);
 
@@ -182,8 +271,16 @@ cooldb = function cooldb() {
                                 }, 0);
                             }
                         });
+                        
+                        // History
+                        if (bufferHistory > 0 ) { 
+                            setTimeout(function() {
+                                addHistory({ item: copy(newItems) }); 
+                            }, 0);
+                        }
+                        
                         // Resolve
-                        resolve(newItems);
+                        resolve([{ old: null, new: newItems, action: 'Inserted' }]);
 
                     } else {
                         throw 'item parameter should correspond to an Object or Array.';
@@ -377,6 +474,40 @@ cooldb = function cooldb() {
                 }
             });
         
+        },
+        
+        changeFeedHistory: function changeFeedHistory(fn) {
+            
+            // Validate it is a function
+            if (typeof fn === 'function') { 
+                changeFeedHCB = fn; 
+            } else {
+                throw 'Invalid change Feed History function.';
+            }
+                
+		},
+        
+        setHistory: function setHistory(buffer) {
+            if (typeof buffer === "number")
+                bufferHistory = buffer;
+            else
+                throw 'buffer should be numeric.';
+        },
+        
+        history: function history() {
+            
+            return new Promise(function(resolve, reject) {
+                try {
+                    cdbHistory.push({});
+                    lazy(cdbHistory).shift();
+                    resolve(cdbHistory);
+                } catch (err) {
+                    var msg = (err.hasOwnProperty('message')) ? err.message : err;
+                    reject(new Error( msg ));
+                }
+            });
+            
+            return this;
         },
         
     };

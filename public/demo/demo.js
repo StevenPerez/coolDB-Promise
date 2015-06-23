@@ -2,8 +2,38 @@ var coolDb = cooldb,
     coolDB = coolDb();
 
 coolDB.changeFeed(function(result){
-    console.log(result);
+    //console.log(result);
 });
+
+coolDB.setHistory(2);
+
+coolDB.changeFeedHistory(function(result){
+    console.log('CHANGE FEED');
+    console.log(result);
+    console.log('=======================');
+});
+
+
+
+coolDB.add({ item: { name: 'Mary' } })
+    .then(function(result) {
+        //console.log(result);
+        console.log( coolDB.db()._result );
+        console.log( coolDB.history()._result );
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
+
+/*
+coolDB.history()
+        .then(function (a) {
+            console.log(a);
+        })
+        .catch(function(err){
+            console.log(err);
+        });
+*/
 
 /*
 // *** Insert Single ***
@@ -81,4 +111,4 @@ console.log( coolDB.clone()._result );
 // console.log( coolDB.clean()._result );
 
 // DB
-console.log( coolDB.db()._result );
+//console.log( coolDB.db()._result );
