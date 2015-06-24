@@ -9729,22 +9729,29 @@ cooldb = function cooldb() {
 
                 // default param array
                 params  = params || {};
-
+                
                 // item key prop
                 if (!params.hasOwnProperty('item'))
                     throw '[History] -> Key => [item] was not found';
 
-                // Check history buffer
-                if (cdbHistory.length > bufferHistory) {
-                    lazy(cdbHistory).shift();
-                }
+                if (!params.hasOwnProperty('action'))
+                    throw '[History] -> Key => [action] was not found';
+                
+                if (!params.hasOwnProperty('isArray'))
+                    throw '[History] -> Key => [isArray] was not found';
                 
                 var gblHistoryCuid = cuid();
                 var singleItem = null;
+                
                 // add
-                if (!Array.isArray(params.item)) {
+                if (!params.isArray) {
+                    
+                    params.new = (params.new === undefined || params.new === null) ? null : params.new;
+                    params.old = (params.old === undefined || params.old === null) ? null : params.old;
+                    
                     // Added
-                    singleItem = { item: [{ old: null, new: params.item, action: 'Inserted', hcuid: cuid() }], action: 'Inserted',  hcuid: gblHistoryCuid };
+                    singleItem = { item: [{ old: params.old, new: params.new, action: params.action, hcuid: cuid() }],
+                                   action: params.action,  hcuid: gblHistoryCuid };
                     cdbHistory.push(singleItem);
 
                     // Change Feed
@@ -9755,30 +9762,34 @@ cooldb = function cooldb() {
                     }
 
                     // Job Done !
-                    resolve({ item: params.item, action: 'Inserted', isArray: false, hcuid: gblHistoryCuid });
+                    resolve({ item: params.item, action: params.action, isArray: false, hcuid: gblHistoryCuid });
 
-                } else if (Array.isArray(params.item)){
+                } else if (params.isArray){
                     
                     //>> Track Additions
                     var newItems = [];
                     //>> add Array
                     params.item.forEach(function(item) {
-                        singleItem = { old: null, new: item, action: 'Inserted', hcuid: cuid() };
+                        
+                        var tempNew = (item.hasOwnProperty('new')) ? item.new : null,
+                            tempOld = (item.hasOwnProperty('old')) ? item.old : null;
+                        
+                        singleItem = { old: tempOld, new: tempNew, action: params.action, hcuid: cuid() };
                         // Added
                         newItems.push(singleItem);
                     });
                     
                     // Added
-                    cdbHistory.push({ item: newItems, action: 'Inserted', hcuid: gblHistoryCuid });
+                    cdbHistory.push({ item: newItems, action: params.action, hcuid: gblHistoryCuid });
                     
                     // Change Feed
                     if (changeFeedHCB != undefined) { 
                         setTimeout(function() {
-                            changeFeedHCB({ item: newItems, action: 'Inserted', hcuid: gblHistoryCuid }); 
+                            changeFeedHCB({ item: newItems, action: params.action, hcuid: gblHistoryCuid }); 
                         }, 0);
                     }
                     // Job Done !
-                    resolve({ item: newItems, action: 'Inserted', isArray: true, hcuid: gblHistoryCuid });
+                    resolve({ item: newItems, action: params.action, isArray: true, hcuid: gblHistoryCuid });
 
                 } else {
                     throw '[History] -> item parameter should correspond to an Object or Array.';
@@ -9787,6 +9798,11 @@ cooldb = function cooldb() {
             } catch (err) {
                 var msg = (err.hasOwnProperty('message')) ? err.message : err;
                 reject(new Error( msg ));
+            } finally {
+                // Check and Resize the history buffer
+                if (cdbHistory.length > bufferHistory) {
+                    cdbHistory = lazy(cdbHistory).shift().value();
+                }
             }
 
         });
@@ -9923,7 +9939,7 @@ cooldb = function cooldb() {
                         // History
                         if (bufferHistory > 0 ) { 
                             setTimeout(function() {
-                                addHistory({ item: params.item }); 
+                                addHistory({ item: params.item, new: params.item, action: 'Inserted', isArray: false }); 
                             }, 0);
                         }
                         // Resolve
@@ -9932,14 +9948,12 @@ cooldb = function cooldb() {
                     } else if (Array.isArray(params.item)){
                         //>> Track Additions
                         var newItems        = [];
-                        var newHistoryItems = [];
                         //>> add Array
                         params.item.forEach(function(item) {
                             if (!item.hasOwnProperty('cuid')) item.cuid = cuid();
                             // Added
                             cdb.push(item);
                             newItems.push({ old: null, new: item, action: 'Inserted' });
-                            newHistoryItems.push(item);
                             
                             // Change Feed
                             if (changeFeedCB != undefined) {
@@ -9952,7 +9966,7 @@ cooldb = function cooldb() {
                         // History
                         if (bufferHistory > 0 ) { 
                             setTimeout(function() {
-                                addHistory({ item: newHistoryItems }); 
+                                addHistory({ item: newItems, action: 'Inserted', isArray: true }); 
                             }, 0);
                         }
                         
@@ -10085,10 +10099,14 @@ cooldb = function cooldb() {
                         throw 'Key => [item] was not found';
                     
                     var itemsUpdated = [];
+                    var isArray = false;
                     
                     $this.get({ key: key, value: value})
                         .then(function(itemsFound) {
                             
+                            // Check if items found is an array or not
+                            isArray = (itemsFound.count > 1) ? true : false;
+                        
                             itemsFound.items.forEach(function(dbItem){
                                 
                                 updateProps(params.item, dbItem)
@@ -10100,10 +10118,33 @@ cooldb = function cooldb() {
                                                 changeFeedCB({ old: result.before, new: result.after, action: 'Updated' }); 
                                             }, 0);
                                         }
+                                    
                                         // Append to Updated Items
-                                        itemsUpdated.push({ old: result.before, new: result.after, action: 'Updated' });
+                                        var item = { old: result.before, new: result.after, action: 'Updated' };
+                                        itemsUpdated.push(item);
+                                    
+                                        // History
+                                        if (!isArray) {
+                                            if (bufferHistory > 0) { 
+                                                setTimeout(function() {
+                                                    addHistory({ item: itemsFound.items[0], old: item.old, new: item.new, action: 'Updated', isArray: false }); 
+                                                }, 0);
+                                            }
+                                        }
                                     })
-                                    .then(function() { resolve(itemsUpdated) })
+                                    .then(function() { 
+                                    
+                                        // History
+                                        if (isArray) {
+                                            if (bufferHistory > 0) { 
+                                                setTimeout(function() {
+                                                    addHistory({ item: itemsUpdated, old: null, new: null, action: 'Updated', isArray: true }); 
+                                                }, 0);
+                                            }
+                                        }
+                                    
+                                        resolve(itemsUpdated);
+                                    })
                                     .catch(function(err) { throw err; });
                             });
                         
@@ -10190,5 +10231,5 @@ cooldb = function cooldb() {
 };
 
 module.exports = cooldb;
-}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_71f76fa0.js","/")
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_732de7b9.js","/")
 },{"buffer":4,"cuid":1,"deepcopy":2,"es6-promise":3,"lazy.js":11,"oMfpAn":8}]},{},[12])

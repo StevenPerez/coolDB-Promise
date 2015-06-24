@@ -95,8 +95,8 @@ coolDB.changeFeedHistory(function(result){
     console.log('=======================');
 });
 
-/* Add one */
-
+/* ADD */
+/*
 coolDB.add({ item: { name: 'Jhon' } })
     .then(function(result) {
         var inter = setInterval(function() {
@@ -109,7 +109,6 @@ coolDB.add({ item: { name: 'Jhon' } })
         console.log(err);
     });
 
-
 coolDB.add({ item: [{ name: 'Mary' }, { name: 'Yorle' }, { name: 'Samantha' } ] })
     .then(function(result) {
         var inter = setInterval(function() {
@@ -117,6 +116,39 @@ coolDB.add({ item: [{ name: 'Mary' }, { name: 'Yorle' }, { name: 'Samantha' } ] 
             console.log( coolDB.db()._result );
             console.log( coolDB.history()._result );
         }, 100);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
+    
+coolDB.add({ item: { name: 'Jane' } })
+    .then(function(result) {
+        var inter = setInterval(function() {
+            clearInterval(inter);
+            console.log( coolDB.db()._result );
+            console.log( coolDB.history()._result );
+        }, 100);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
+*
+
+/* UPDATE */
+
+coolDB.add({ item: { name: 'Jhon' } })
+    .then(function (){
+    
+        coolDB.update({ key: 'cuid', value: coolDB.db()._result[0].cuid, item: { name: 'abc' } })
+              .then(function(result) {
+            
+                    var inter = setInterval(function() {
+                        clearInterval(inter);
+                        console.log( coolDB.db()._result );
+                        console.log( coolDB.history()._result );
+                    }, 100);
+            
+              });
     })
     .catch(function(err) {
         console.log(err);
