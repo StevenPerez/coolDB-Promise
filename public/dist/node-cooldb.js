@@ -5,6 +5,12 @@ var cuid        = require('cuid'),
     clone       = require('clone');
 
 cooldb = function cooldb() {
+    
+    (this.hasOwnProperty('global')) ? global.Promise = Promise : window.Promise = Promise;
+    (this.hasOwnProperty('global')) ? global.clone = clone : window.clone = clone;
+    (this.hasOwnProperty('global')) ? global.lazy = lazy : window.lazy = lazy;
+    (this.hasOwnProperty('global')) ? global.cuid = cuid : window.cuid = cuid;
+    
     // Production Array
     var cdb             = [];
     // Production Change Feed 
@@ -249,8 +255,11 @@ cooldb = function cooldb() {
                     // >> Validations <<
 
                     // default param array
-                    params  = params || {};
-
+                    params                  = params || {};
+                    
+                    if (!params.hasOwnProperty('isHistoryNeeded'))
+                        params.isHistoryNeeded = true;
+                    
                     // item key prop
                     if (!params.hasOwnProperty('item'))
                         throw 'Key => [item] was not found';
@@ -268,7 +277,7 @@ cooldb = function cooldb() {
                             }, callbackTimer);
                         }
                         // History
-                        if (bufferHistory > 0 ) { 
+                        if (bufferHistory > 0 && params.isHistoryNeeded) { 
                             addHistory({ item: clone(params.item), new: clone(params.item), action: 'Inserted', isArray: false });
                         }
                         
@@ -294,7 +303,7 @@ cooldb = function cooldb() {
                         });
                         
                         // History
-                        if (bufferHistory > 0 ) { 
+                        if (bufferHistory > 0 && params.isHistoryNeeded) { 
                             addHistory({ item: clone(newItems), action: 'Inserted', isArray: true });
                         }
                         
@@ -324,6 +333,9 @@ cooldb = function cooldb() {
                     // >> Validations <<
                     // default param array
                     params  = params || {};
+                    
+                    if (!params.hasOwnProperty('isHistoryNeeded'))
+                        params.isHistoryNeeded = true;
 
                     var key   = null,
                         value = null;
@@ -369,7 +381,7 @@ cooldb = function cooldb() {
                     }
                 
                     // History
-                    if (bufferHistory > 0 ) { 
+                    if (bufferHistory > 0 && params.isHistoryNeeded) { 
                         if (!Array.isArray(itemDeleted)) {
                             addHistory({ item: clone(itemDeleted), old: clone(itemDeleted), action: 'Deleted', isArray: false });
                         } else if (Array.isArray(itemDeleted)) {
@@ -414,7 +426,10 @@ cooldb = function cooldb() {
                     // >> Validations <<
                     
                     // default param array
-                    params  = params || {};
+                    params                  = params || {};
+                    
+                    if (!params.hasOwnProperty('isHistoryNeeded'))
+                        params.isHistoryNeeded = true;
 
                     var key   = null,
                         value = null;
@@ -437,8 +452,9 @@ cooldb = function cooldb() {
                     if (!params.hasOwnProperty('item'))
                         throw 'Key => [item] was not found';
                     
-                    var itemsUpdated = [];
-                    var isArray = false;
+                    var itemsUpdated        = [];
+                    var itemFound           = [];
+                    var isArray             = false;
                     
                     $this.get({ key: key, value: value})
                         .then(function(itemsFound) {
@@ -461,29 +477,29 @@ cooldb = function cooldb() {
                                         // Append to Updated Items
                                         var item = { old: result.before, new: result.after, action: 'Updated' };
                                         itemsUpdated.push(item);
-                                    
-                                        // History
-                                        if (!isArray) {
-                                            if (bufferHistory > 0) { 
-                                                addHistory({ item: clone(itemsFound.items[0]), old: clone(item.old), 
-                                                            new: clone(item.new), action: 'Updated', isArray: false }); 
-                                            }
+                                        
+                                        if (bufferHistory > 0 && params.isHistoryNeeded && !isArray) { 
+                                            itemFound = clone(item);
                                         }
+                                    
                                     })
                                     .then(function() { 
-                                    
-                                        // History
-                                        if (isArray) {
-                                            if (bufferHistory > 0) { 
-                                                addHistory({ item: clone(itemsUpdated), old: null, new: null, action: 'Updated', isArray: true });
-                                            }
-                                        }
-                                    
                                         resolve(itemsUpdated);
                                     })
                                     .catch(function(err) { throw err; });
                             });
                         
+                        })
+                        .then(function(){
+                            // History
+                            if (bufferHistory > 0 && params.isHistoryNeeded) { 
+                                if (!isArray) {
+                                    addHistory({ item: clone(itemFound), old: clone(itemFound.old), 
+                                                  new: clone(itemFound.new), action: 'Updated', isArray: false });
+                                } else if (isArray) {
+                                    addHistory({ item: clone(itemsUpdated), old: null, new: null, action: 'Updated', isArray: true });
+                                }
+                            }
                         })
                         .catch(function(err) { throw err; });
                     
@@ -509,10 +525,15 @@ cooldb = function cooldb() {
             });
         },
         
-        clean: function clean() {
+        clean: function clean(params) {
             
             return new Promise(function(resolve, reject) {
                 try {
+                    
+                    params                  = params || {};
+                    
+                    if (!params.hasOwnProperty('isHistoryNeeded'))
+                        params.isHistoryNeeded = true;
                     
                     var cdbTemp = null;
                     if (bufferHistory > 0)
@@ -528,7 +549,7 @@ cooldb = function cooldb() {
                     }
                     
                     // History
-                    if (bufferHistory > 0 ) { 
+                    if (bufferHistory > 0 && params.isHistoryNeeded) { 
                         addHistory({ item: cdbTemp, action: 'Cleaned', isArray: true });
                     }
                     
@@ -579,6 +600,58 @@ cooldb = function cooldb() {
             });
             
             return this;
+        },
+        
+        undo: function undo(params) {
+            
+            return new Promise(function(resolve, reject){
+                try {
+                    // >> Validations <<
+
+                    // default param array
+                    params          = params || {};
+                    params.hicuid   = params.hicuid || null;
+                    
+                    // item key prop
+                    if (!params.hasOwnProperty('hcuid'))
+                        throw 'Key => [hcuid] was not found.';
+                    
+                    if (cdbHistory.length === 0)
+                        throw 'The history is empty.';
+                    
+                    var hItem = null;
+                    if (params.hicuid === null) {
+                        hItem = cdbHistory.filter(function(hitem){ return hitem.hcuid == params.hcuid;  });
+                    } else {
+                        hItem = cdbHistory.filter(function(hitem){ return hitem.hcuid == params.hcuid })
+                                          [0].item
+                                          .filter(function(hitem){ return hitem.hcuid == params.hicuid });
+                    }
+                    
+                    // Validate filter output
+                    if (hItem.length == 0)
+                        throw 'No history item found.';
+                    
+                    // Standard Query for Array and Single Elements
+                    hItem = hItem[0];
+                    hItem = (hItem.hasOwnProperty('item')) ? hItem : { item: [hItem] };
+                    
+                    hItem.item.forEach(function(item) {
+                        if (item.action === 'Inserted') {
+                            resolve(coolDB.del({ key: 'cuid', value: item.new.cuid, isHistoryNeeded: false })._result);
+                        } 
+                        else if (item.action === 'Updated') {
+                            resolve(coolDB.update({ key: 'cuid', value: item.old.cuid,  
+                                                    item : item.old,
+                                                    isHistoryNeeded: false })._result);
+                        }
+                    });
+                    
+                } catch (err) {
+                    var msg = (err.hasOwnProperty('message')) ? err.message : err;
+                    reject(new Error( msg ));
+                }
+            });
         }
         
     };
