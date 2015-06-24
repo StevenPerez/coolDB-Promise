@@ -2,9 +2,11 @@ var coolDb = cooldb,
     coolDB = coolDb();
 
 coolDB.changeFeed(function(result){
+    /*
     console.log('PROD CHANGE FEED');
     console.log(result);
     console.log('=======================');
+    */
 });
 
 /*
@@ -87,7 +89,7 @@ console.log( coolDB.clone()._result );
 
 // HISTORY
 
-coolDB.setBufferHistory(2);
+coolDB.setBufferHistory(5);
 
 coolDB.changeFeedHistory(function(result){
     console.log('HISTORY CHANGE FEED');
@@ -329,7 +331,7 @@ coolDB.add({ item: { name: 'Jhon' } })
 */
 
 /* UNDO UPDATES */
-
+/*
 function displayDbItems(){
     console.log('DB ITEMS');
     console.log( clone(coolDB.db()._result) );
@@ -348,8 +350,6 @@ function changeByAge(item) {
 function UndoSpecific(){
     
     coolDB.history().then(function(item){
-        
-        console.log(item);
         
         coolDB.undo({ hcuid: item[1].hcuid })
                 .then(function(hItem){ 
@@ -370,3 +370,86 @@ coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
         .catch(function(err){
             console.log(err);
         });
+*/
+
+/* UNDO A SPECIFIC UPDATE UPDATES */
+/*
+function displayDbItems(){
+    console.log('DB ITEMS');
+    console.log( clone(coolDB.db()._result) );
+    
+    return clone(coolDB.db()._result[0]);
+}
+
+function changeByAge(item) {
+    coolDB.update({ key: 'age', value: 20, item: { name: 'Yolo'} })
+          .then(function(item){
+            console.log('RESULT -> DB ITEM UPDATE');
+            console.log( clone(item ) );                
+          });
+}
+
+function UndoSpecificFromBunch(){
+    
+    coolDB.history()
+          .then(function(item){
+        
+            coolDB.undo({ hcuid: item[1].hcuid, hicuid: item[1].item[1].hcuid })
+                    .then(function(hItem){ 
+                        console.log('RESULT -> DB WITHOUT SPECIFIC ITEM DELETED BY UNDO');
+                        console.log( coolDB.db()._result );
+                    })
+                    .catch(function(err){
+                        console.log(err);
+                    });
+        });
+}
+
+coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
+        .then(displayDbItems)
+        .then(changeByAge)
+        .then(UndoSpecificFromBunch)
+        .catch(function(err){
+            console.log(err);
+        });
+*/
+
+/* UNDO DELETE */
+/*
+function deleteItem() {
+    var item = coolDB.db()._result[0];
+    coolDB.del({ key: 'cuid', value: item.cuid })
+          .catch(function(err){
+            console.log(err);
+          });
+    
+    return clone(item);
+}
+
+function displayDbItems(){
+    console.log('DB ITEMS');
+    console.log( clone(coolDB.db()._result) );
+    return coolDB.history()._result[1];  
+}
+
+function UndoSpecific(item){
+
+    // Undo Specific Item from a bunch of Inserts
+    coolDB.undo({ hcuid: item.hcuid })
+            .then(function(hItem){ 
+                console.log('RESULT -> DB UNDO DELETE');
+                console.log( coolDB.db()._result );
+            })
+            .catch(function(err){
+                console.log(err);
+            });
+}
+
+coolDB.add({ item: { name: 'Jhon' } })
+        .then(deleteItem)
+        .then(displayDbItems)
+        .then(UndoSpecific)
+        .catch(function(err){
+            console.log(err);
+        });
+*/

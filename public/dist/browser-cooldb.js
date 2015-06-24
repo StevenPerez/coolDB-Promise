@@ -9250,7 +9250,7 @@ cooldb = function cooldb() {
                     // >> Validations <<
 
                     // default param array
-                    params                  = params || {};
+                    params = params || {};
                     
                     if (!params.hasOwnProperty('isHistoryNeeded'))
                         params.isHistoryNeeded = true;
@@ -9353,6 +9353,7 @@ cooldb = function cooldb() {
                     
                     //>> Track Deletions
                     var delItems = [];
+                    var delItem  = null;
                     
                     for (var i = 0; i < itemsFound.length; i++) {
 
@@ -9362,9 +9363,9 @@ cooldb = function cooldb() {
                         if (index >= 0) {
                             cdb.splice(index, 1); 
                         }
-
+                        
                         var itemDeleted = (Array.isArray(item)) ? item[0] : item;
-
+                        
                         // Change Feed
                         if (changeFeedCB != undefined) { 
                             setTimeout(function() {
@@ -9372,17 +9373,22 @@ cooldb = function cooldb() {
                             }, callbackTimer);
                         }
 
+                        if ( bufferHistory > 0 && itemsFound.length == 1 ) {
+                            delItem = clone(itemDeleted);
+                        }
+                        
                         delItems.push({ old: itemDeleted, new: null, action: 'Deleted' });
                     }
                 
                     // History
                     if (bufferHistory > 0 && params.isHistoryNeeded) { 
-                        if (!Array.isArray(itemDeleted)) {
-                            addHistory({ item: clone(itemDeleted), old: clone(itemDeleted), action: 'Deleted', isArray: false });
-                        } else if (Array.isArray(itemDeleted)) {
-                            if (bufferHistory > 0 ) { 
-                                addHistory({ item: clone(itemDeleted), old: clone(itemDeleted), action: 'Deleted', isArray: true });
-                            }
+                        if (delItems.length > 1) {
+                            console.log('ARRAY');
+                            console.log(delItems);
+                            addHistory({ item: clone(delItems), old: clone(delItems), action: 'Deleted', isArray: true });
+                            
+                        } else {
+                            addHistory({ item: clone([delItem]), old: clone(delItem), action: 'Deleted', isArray: false });
                         }
                     }
                     
@@ -9476,10 +9482,6 @@ cooldb = function cooldb() {
                                         if (bufferHistory > 0 && params.isHistoryNeeded && !isArray) { 
                                             itemFound = clone(item);
                                         }
-                                    
-                                    })
-                                    .then(function() { 
-                                        resolve(itemsUpdated);
                                     })
                                     .catch(function(err) { throw err; });
                             });
@@ -9495,6 +9497,10 @@ cooldb = function cooldb() {
                                     addHistory({ item: clone(itemsUpdated), old: null, new: null, action: 'Updated', isArray: true });
                                 }
                             }
+                        
+                        })
+                        .then(function(){
+                            resolve(itemsUpdated);
                         })
                         .catch(function(err) { throw err; });
                     
@@ -9632,13 +9638,19 @@ cooldb = function cooldb() {
                     hItem = (hItem.hasOwnProperty('item')) ? hItem : { item: [hItem] };
                     
                     hItem.item.forEach(function(item) {
+                        // UNDO INSERT
                         if (item.action === 'Inserted') {
                             resolve(coolDB.del({ key: 'cuid', value: item.new.cuid, isHistoryNeeded: false })._result);
                         } 
+                        // UNDO UPDATE
                         else if (item.action === 'Updated') {
                             resolve(coolDB.update({ key: 'cuid', value: item.old.cuid,  
                                                     item : item.old,
                                                     isHistoryNeeded: false })._result);
+                        }
+                        // UNDO DELETE
+                        else if (item.action === 'Deleted') {
+                            resolve(coolDB.add({ item : item.old, isHistoryNeeded: false })._result);
                         }
                     });
                     
@@ -9654,5 +9666,5 @@ cooldb = function cooldb() {
 };
 
 module.exports = cooldb;
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_beb1d6ba.js","/")
+}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_bc737105.js","/")
 },{"buffer":4,"clone":1,"cuid":2,"es6-promise":3,"lazy.js":8,"ngpmcQ":7}]},{},[9])
