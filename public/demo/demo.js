@@ -87,23 +87,23 @@ console.log( coolDB.clone()._result );
 
 // HISTORY
 
-coolDB.setHistory(2);
+coolDB.setHistory(3);
 
 coolDB.changeFeedHistory(function(result){
     console.log('HISTORY CHANGE FEED');
     console.log(result);
+    //console.log(result.item[0].new);
     console.log('=======================');
 });
 
 /* ADD */
-/*
+
 coolDB.add({ item: { name: 'Jhon' } })
     .then(function(result) {
-        var inter = setInterval(function() {
-            clearInterval(inter);
-            console.log( coolDB.db()._result );
-            console.log( coolDB.history()._result );
-        }, 100);
+
+        //console.log( coolDB.db()._result );
+        //console.log( coolDB.history()._result );
+
     })
     .catch(function(err) {
         console.log(err);
@@ -111,11 +111,10 @@ coolDB.add({ item: { name: 'Jhon' } })
 
 coolDB.add({ item: [{ name: 'Mary' }, { name: 'Yorle' }, { name: 'Samantha' } ] })
     .then(function(result) {
-        var inter = setInterval(function() {
-            clearInterval(inter);
-            console.log( coolDB.db()._result );
-            console.log( coolDB.history()._result );
-        }, 100);
+
+        //console.log( coolDB.db()._result );
+        //console.log( coolDB.history()._result );
+
     })
     .catch(function(err) {
         console.log(err);
@@ -123,32 +122,33 @@ coolDB.add({ item: [{ name: 'Mary' }, { name: 'Yorle' }, { name: 'Samantha' } ] 
     
 coolDB.add({ item: { name: 'Jane' } })
     .then(function(result) {
-        var inter = setInterval(function() {
-            clearInterval(inter);
-            console.log( coolDB.db()._result );
-            console.log( coolDB.history()._result );
-        }, 100);
+
+        //console.log( coolDB.db()._result );
+        //console.log( coolDB.history()._result );
+
     })
     .catch(function(err) {
         console.log(err);
     });
-*
+
 
 /* UPDATE */
 
 coolDB.add({ item: { name: 'Jhon' } })
+    .then()
     .then(function (){
-    
-        coolDB.update({ key: 'cuid', value: coolDB.db()._result[0].cuid, item: { name: 'abc' } })
-              .then(function(result) {
-            
-                    var inter = setInterval(function() {
-                        clearInterval(inter);
-                        console.log( coolDB.db()._result );
-                        console.log( coolDB.history()._result );
-                    }, 100);
-            
-              });
+
+            coolDB.update({ key: 'cuid', value: coolDB.db()._result[0].cuid, item: { name: 'abc' } })
+                  .then(function(result) {
+
+                    console.log( coolDB.db()._result );
+                    console.log( coolDB.history()._result );
+
+                  })
+                  .catch(function(err){
+                    console.log(err);
+                  });
+
     })
     .catch(function(err) {
         console.log(err);

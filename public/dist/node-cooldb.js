@@ -2,7 +2,7 @@ var cuid        = require('cuid'),
     pPolyfill   = require('es6-promise').polyfill(),
     Promise     = require('es6-promise').Promise,
     lazy        = require('lazy.js'),
-    copy        = require('deepcopy');
+    clone       = require('clone');
 
 cooldb = function cooldb() {
     // Production Array
@@ -14,7 +14,9 @@ cooldb = function cooldb() {
     // History
     var cdbHistory      = [];
     var bufferHistory   = 0;
-
+    // Callback time
+    var callbackTimer   = 0;
+    
     updateProps : function updateProps(source, dest) {
 
         return new Promise(function(resolve, reject){
@@ -65,8 +67,9 @@ cooldb = function cooldb() {
                 if (!params.hasOwnProperty('isArray'))
                     throw '[History] -> Key => [isArray] was not found';
                 
-                var gblHistoryCuid = cuid();
-                var singleItem = null;
+                var gblHistoryCuid  = cuid();
+                var singleItem      = null;
+                var interval        = null;
                 
                 // add
                 if (!params.isArray) {
@@ -77,13 +80,14 @@ cooldb = function cooldb() {
                     // Added
                     singleItem = { item: [{ old: params.old, new: params.new, action: params.action, hcuid: cuid() }],
                                    action: params.action,  hcuid: gblHistoryCuid };
+                    
                     cdbHistory.push(singleItem);
 
                     // Change Feed
                     if (changeFeedHCB != undefined) { 
                         setTimeout(function() {
-                            changeFeedHCB(singleItem); 
-                        }, 0);
+                            changeFeedHCB(singleItem);
+                        }, callbackTimer);
                     }
 
                     // Job Done !
@@ -111,8 +115,9 @@ cooldb = function cooldb() {
                     if (changeFeedHCB != undefined) { 
                         setTimeout(function() {
                             changeFeedHCB({ item: newItems, action: params.action, hcuid: gblHistoryCuid }); 
-                        }, 0);
+                        }, callbackTimer);
                     }
+                    
                     // Job Done !
                     resolve({ item: newItems, action: params.action, isArray: true, hcuid: gblHistoryCuid });
 
@@ -259,14 +264,13 @@ cooldb = function cooldb() {
                         if (changeFeedCB != undefined) { 
                             setTimeout(function() {
                                 changeFeedCB({ old: null, new: params.item, action: 'Inserted' }); 
-                            }, 0);
+                            }, callbackTimer);
                         }
                         // History
                         if (bufferHistory > 0 ) { 
-                            setTimeout(function() {
-                                addHistory({ item: params.item, new: params.item, action: 'Inserted', isArray: false }); 
-                            }, 0);
+                            addHistory({ item: clone(params.item), new: clone(params.item), action: 'Inserted', isArray: false });
                         }
+                        
                         // Resolve
                         resolve([{ old: null, new: params.item, action: 'Inserted' }]);
 
@@ -284,15 +288,13 @@ cooldb = function cooldb() {
                             if (changeFeedCB != undefined) {
                                 setTimeout(function() {
                                     changeFeedCB({ old: null, new: item, action: 'Inserted' }); 
-                                }, 0);
+                                }, callbackTimer);
                             }
                         });
                         
                         // History
                         if (bufferHistory > 0 ) { 
-                            setTimeout(function() {
-                                addHistory({ item: newItems, action: 'Inserted', isArray: true }); 
-                            }, 0);
+                            addHistory({ item: clone(newItems), action: 'Inserted', isArray: true });
                         }
                         
                         // Resolve
@@ -359,7 +361,7 @@ cooldb = function cooldb() {
                         if (changeFeedCB != undefined) { 
                             setTimeout(function() {
                                 changeFeedCB({ old: itemDeleted, new: null, action: 'Deleted' }); 
-                            }, 0);
+                            }, callbackTimer);
                         }
 
                         delItems.push({ old: itemDeleted, new: null, action: 'Deleted' });
@@ -441,7 +443,7 @@ cooldb = function cooldb() {
                                         if (changeFeedCB != undefined) { 
                                             setTimeout(function() {
                                                 changeFeedCB({ old: result.before, new: result.after, action: 'Updated' }); 
-                                            }, 0);
+                                            }, callbackTimer);
                                         }
                                     
                                         // Append to Updated Items
@@ -451,9 +453,8 @@ cooldb = function cooldb() {
                                         // History
                                         if (!isArray) {
                                             if (bufferHistory > 0) { 
-                                                setTimeout(function() {
-                                                    addHistory({ item: itemsFound.items[0], old: item.old, new: item.new, action: 'Updated', isArray: false }); 
-                                                }, 0);
+                                                addHistory({ item: clone(itemsFound.items[0]), old: clone(item.old), 
+                                                            new: clone(item.new), action: 'Updated', isArray: false }); 
                                             }
                                         }
                                     })
@@ -462,9 +463,7 @@ cooldb = function cooldb() {
                                         // History
                                         if (isArray) {
                                             if (bufferHistory > 0) { 
-                                                setTimeout(function() {
-                                                    addHistory({ item: itemsUpdated, old: null, new: null, action: 'Updated', isArray: true }); 
-                                                }, 0);
+                                                addHistory({ item: clone(itemsUpdated), old: null, new: null, action: 'Updated', isArray: true });
                                             }
                                         }
                                     
@@ -507,7 +506,7 @@ cooldb = function cooldb() {
                     if (changeFeedCB != undefined) { 
                         setTimeout(function() {
                             changeFeedCB({ old: null, new: null, action: 'Cleaned' }); 
-                        }, 0);
+                        }, callbackTimer);
                     }
                     // Resolve
                     resolve([{ old: null, new: null, action: 'Cleaned' }]);
@@ -517,6 +516,13 @@ cooldb = function cooldb() {
                 }
             });
         
+        },
+        
+        setTimer: function setTimer(timer) {
+            if (typeof timer === "number")
+                callbackTimer = timer;
+            else
+                throw 'timer should be numeric.';
         },
         
         changeFeedHistory: function changeFeedHistory(fn) {

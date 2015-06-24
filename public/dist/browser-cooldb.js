@@ -1,5 +1,169 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+var clone = (function() {
+'use strict';
+
+/**
+ * Clones (copies) an Object using deep copying.
+ *
+ * This function supports circular references by default, but if you are certain
+ * there are no circular references in your object, you can save some CPU time
+ * by calling clone(obj, false).
+ *
+ * Caution: if `circular` is false and `parent` contains circular references,
+ * your program may enter an infinite loop and crash.
+ *
+ * @param `parent` - the object to be cloned
+ * @param `circular` - set to true if the object to be cloned may contain
+ *    circular references. (optional - true by default)
+ * @param `depth` - set to a number if the object is only to be cloned to
+ *    a particular depth. (optional - defaults to Infinity)
+ * @param `prototype` - sets the prototype to be used when cloning an object.
+ *    (optional - defaults to parent prototype).
+*/
+function clone(parent, circular, depth, prototype) {
+  var filter;
+  if (typeof circular === 'object') {
+    depth = circular.depth;
+    prototype = circular.prototype;
+    filter = circular.filter;
+    circular = circular.circular
+  }
+  // maintain two arrays for circular references, where corresponding parents
+  // and children have the same index
+  var allParents = [];
+  var allChildren = [];
+
+  var useBuffer = typeof Buffer != 'undefined';
+
+  if (typeof circular == 'undefined')
+    circular = true;
+
+  if (typeof depth == 'undefined')
+    depth = Infinity;
+
+  // recurse this function so we don't reset allParents and allChildren
+  function _clone(parent, depth) {
+    // cloning null always returns null
+    if (parent === null)
+      return null;
+
+    if (depth == 0)
+      return parent;
+
+    var child;
+    var proto;
+    if (typeof parent != 'object') {
+      return parent;
+    }
+
+    if (clone.__isArray(parent)) {
+      child = [];
+    } else if (clone.__isRegExp(parent)) {
+      child = new RegExp(parent.source, __getRegExpFlags(parent));
+      if (parent.lastIndex) child.lastIndex = parent.lastIndex;
+    } else if (clone.__isDate(parent)) {
+      child = new Date(parent.getTime());
+    } else if (useBuffer && Buffer.isBuffer(parent)) {
+      child = new Buffer(parent.length);
+      parent.copy(child);
+      return child;
+    } else {
+      if (typeof prototype == 'undefined') {
+        proto = Object.getPrototypeOf(parent);
+        child = Object.create(proto);
+      }
+      else {
+        child = Object.create(prototype);
+        proto = prototype;
+      }
+    }
+
+    if (circular) {
+      var index = allParents.indexOf(parent);
+
+      if (index != -1) {
+        return allChildren[index];
+      }
+      allParents.push(parent);
+      allChildren.push(child);
+    }
+
+    for (var i in parent) {
+      var attrs;
+      if (proto) {
+        attrs = Object.getOwnPropertyDescriptor(proto, i);
+      }
+
+      if (attrs && attrs.set == null) {
+        continue;
+      }
+      child[i] = _clone(parent[i], depth - 1);
+    }
+
+    return child;
+  }
+
+  return _clone(parent, depth);
+}
+
+/**
+ * Simple flat clone using prototype, accepts only objects, usefull for property
+ * override on FLAT configuration object (no nested props).
+ *
+ * USE WITH CAUTION! This may not behave as you wish if you do not know how this
+ * works.
+ */
+clone.clonePrototype = function clonePrototype(parent) {
+  if (parent === null)
+    return null;
+
+  var c = function () {};
+  c.prototype = parent;
+  return new c();
+};
+
+// private utility functions
+
+function __objToStr(o) {
+  return Object.prototype.toString.call(o);
+};
+clone.__objToStr = __objToStr;
+
+function __isDate(o) {
+  return typeof o === 'object' && __objToStr(o) === '[object Date]';
+};
+clone.__isDate = __isDate;
+
+function __isArray(o) {
+  return typeof o === 'object' && __objToStr(o) === '[object Array]';
+};
+clone.__isArray = __isArray;
+
+function __isRegExp(o) {
+  return typeof o === 'object' && __objToStr(o) === '[object RegExp]';
+};
+clone.__isRegExp = __isRegExp;
+
+function __getRegExpFlags(re) {
+  var flags = '';
+  if (re.global) flags += 'g';
+  if (re.ignoreCase) flags += 'i';
+  if (re.multiline) flags += 'm';
+  return flags;
+};
+clone.__getRegExpFlags = __getRegExpFlags;
+
+return clone;
+})();
+
+if (typeof module === 'object' && module.exports) {
+  module.exports = clone;
+}
+
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/clone/clone.js","/../../node_modules/clone")
+},{"buffer":4,"oMfpAn":7}],2:[function(require,module,exports){
+(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /**
  * cuid.js
  * Collision-resistant UID generator for browsers and node.
@@ -112,240 +276,7 @@
 }(this.applitude || this));
 
 }).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/cuid/dist/browser-cuid.js","/../../node_modules/cuid/dist")
-},{"buffer":4,"oMfpAn":8}],2:[function(require,module,exports){
-(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-/*!
- * @license deepcopy.js Copyright(c) 2013 sasa+1
- * https://github.com/sasaplus1/deepcopy.js
- * Released under the MIT license.
- */
-
-
-/**
- * export to AMD/CommonJS/global.
- *
- * @param {Object} global global object.
- * @param {Function} factory factory method.
- */
-(function(global, factory) {
-  'use strict';
-
-  if (typeof define === 'function' && !!define.amd) {
-    define(factory);
-  } else if (typeof exports === 'object') {
-    module.exports = factory();
-  } else {
-    global.deepcopy = factory();
-  }
-}(this, function() {
-  'use strict';
-
-  var isNode, util, isBuffer, getKeys, getSymbols, indexOfArray;
-
-  // is node.js/io.js?
-  isNode = (typeof process !== 'undefined' && typeof require !== 'undefined');
-
-  // fallback util module for browser.
-  util = (isNode) ? require('util') : (function() {
-    function isArray(value) {
-      return (typeof value === 'object' &&
-          Object.prototype.toString.call(value) === '[object Array]');
-    }
-
-    function isDate(value) {
-      return (typeof value === 'object' &&
-          Object.prototype.toString.call(value) === '[object Date]');
-    }
-
-    function isRegExp(value) {
-      return (typeof value === 'object' &&
-          Object.prototype.toString.call(value) === '[object RegExp]');
-    }
-
-    function isSymbol(value) {
-      return (typeof value === 'symbol');
-    }
-
-    return {
-      isArray: (typeof Array.isArray === 'function') ?
-          function(obj) {
-            return Array.isArray(obj);
-          } : isArray,
-      isDate: isDate,
-      isRegExp: isRegExp,
-      isSymbol: (typeof Symbol === 'function') ?
-          isSymbol :
-          function() {
-            // always return false when Symbol is not supported.
-            return false;
-          }
-    };
-  }());
-
-  // fallback Buffer.isBuffer
-  isBuffer = (isNode) ?
-      function(obj) {
-        return Buffer.isBuffer(obj);
-      } :
-      function() {
-        // if browser, always return false
-        return false;
-      };
-
-  // fallback Object.keys for old browsers.
-  getKeys = (typeof Object.keys === 'function') ?
-      function(obj) {
-        return Object.keys(obj);
-      } :
-      function(obj) {
-        var keys = [],
-            key;
-
-        if (obj === null || typeof obj !== 'object') {
-          throw new TypeError('obj is not an Object');
-        }
-
-        for (key in obj) {
-          obj.hasOwnProperty(key) && keys.push(key);
-        }
-
-        return keys;
-      };
-
-  // get symbols in object.
-  getSymbols = (typeof Symbol === 'function') ?
-      function(obj) {
-        return Object.getOwnPropertySymbols(obj);
-      } :
-      function() {
-        // always return empty array when Symbol is not supported.
-        return [];
-      };
-
-  // fallback Array#indexOf for old browsers.
-  indexOfArray = (typeof Array.prototype.indexOf === 'function') ?
-      function(array, searchElement) {
-        return array.indexOf(searchElement);
-      } :
-      function(array, searchElement) {
-        var i, len;
-
-        if (!util.isArray(array)) {
-          throw new TypeError('array is not an Array');
-        }
-
-        for (i = 0, len = array.length; i < len; ++i) {
-          if (array[i] === searchElement) {
-            return i;
-          }
-        }
-
-        return -1;
-      };
-
-  /**
-   * recursive deep copy for value.
-   *
-   * @private
-   * @param {*} value copy target.
-   * @param {*} clone
-   * @param {Array} visited
-   * @param {Array} reference
-   * @return {*} copied value.
-   */
-  function copyValue_(value, clone, visited, reference) {
-    var str, pos, buf, keys, i, len, key, val, idx, obj, ref;
-
-    // number, string, boolean, null, undefined, function and symbol.
-    if (value === null || typeof value !== 'object') {
-      return value;
-    }
-
-    // Date.
-    if (util.isDate(value)) {
-      // Firefox need to convert to Number
-      //
-      // Firefox:
-      //   var date = new Date;
-      //   +date;            // 1420909365967
-      //   +new Date(date);  // 1420909365000
-      //   +new Date(+date); // 1420909365967
-      // Chrome:
-      //   var date = new Date;
-      //   +date;            // 1420909757913
-      //   +new Date(date);  // 1420909757913
-      //   +new Date(+date); // 1420909757913
-      return new Date(+value);
-    }
-
-    // RegExp.
-    if (util.isRegExp(value)) {
-      // Chrome, Safari:
-      //   (new RegExp).source => "(?:)"
-      // Firefox:
-      //   (new RegExp).source => ""
-      // Chrome, Safari, Firefox
-      //   String(new RegExp) => "/(?:)/"
-      str = String(value);
-      pos = str.lastIndexOf('/');
-
-      return new RegExp(str.slice(1, pos), str.slice(pos + 1));
-    }
-
-    // Buffer, node.js only.
-    if (isBuffer(value)) {
-      buf = new Buffer(value.length);
-      value.copy(buf);
-
-      return buf;
-    }
-
-    // Object or Array.
-    keys = getKeys(value).concat(getSymbols(value));
-
-    for (i = 0, len = keys.length; i < len; ++i) {
-      key = keys[i];
-      val = value[key];
-
-      if (val !== null && typeof val === 'object') {
-        idx = indexOfArray(visited, val);
-
-        if (idx === -1) {
-          // not circular reference
-          obj = (util.isArray(val)) ? [] : {};
-
-          visited.push(val);
-          reference.push(obj);
-        } else {
-          // circular reference
-          ref = reference[idx];
-        }
-      }
-
-      clone[key] = ref || copyValue_(val, obj, visited, reference);
-    }
-
-    return clone;
-  }
-
-  /**
-   * deep copy for value.
-   *
-   * @param {*} value copy target.
-   */
-  function deepcopy(value) {
-    var clone = (util.isArray(value)) ? [] : {},
-        visited = [value],
-        reference = [clone];
-
-    return copyValue_(value, clone, visited, reference);
-  }
-
-  return deepcopy;
-}));
-
-}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/deepcopy/deepcopy.js","/../../node_modules/deepcopy")
-},{"buffer":4,"oMfpAn":8,"util":10}],3:[function(require,module,exports){
+},{"buffer":4,"oMfpAn":7}],3:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*!
  * @overview es6-promise - a tiny implementation of Promises/A+.
@@ -1306,7 +1237,7 @@
 
 
 }).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/es6-promise/dist/es6-promise.js","/../../node_modules/es6-promise/dist")
-},{"buffer":4,"oMfpAn":8}],4:[function(require,module,exports){
+},{"buffer":4,"oMfpAn":7}],4:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*!
  * The buffer module from node.js, for the browser.
@@ -2419,7 +2350,7 @@ function assert (test, message) {
 }
 
 }).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/index.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer")
-},{"base64-js":5,"buffer":4,"ieee754":6,"oMfpAn":8}],5:[function(require,module,exports){
+},{"base64-js":5,"buffer":4,"ieee754":6,"oMfpAn":7}],5:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
@@ -2547,7 +2478,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
 }).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib/b64.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib")
-},{"buffer":4,"oMfpAn":8}],6:[function(require,module,exports){
+},{"buffer":4,"oMfpAn":7}],6:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 exports.read = function(buffer, offset, isLE, mLen, nBytes) {
   var e, m,
@@ -2635,34 +2566,7 @@ exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
 };
 
 }).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/ieee754/index.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/ieee754")
-},{"buffer":4,"oMfpAn":8}],7:[function(require,module,exports){
-(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-if (typeof Object.create === 'function') {
-  // implementation from standard node.js 'util' module
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    ctor.prototype = Object.create(superCtor.prototype, {
-      constructor: {
-        value: ctor,
-        enumerable: false,
-        writable: true,
-        configurable: true
-      }
-    });
-  };
-} else {
-  // old school shim for old browsers
-  module.exports = function inherits(ctor, superCtor) {
-    ctor.super_ = superCtor
-    var TempCtor = function () {}
-    TempCtor.prototype = superCtor.prototype
-    ctor.prototype = new TempCtor()
-    ctor.prototype.constructor = ctor
-  }
-}
-
-}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/inherits/inherits_browser.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/inherits")
-},{"buffer":4,"oMfpAn":8}],8:[function(require,module,exports){
+},{"buffer":4,"oMfpAn":7}],7:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 // shim for using process in browser
 
@@ -2729,606 +2633,7 @@ process.chdir = function (dir) {
 };
 
 }).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/process/browser.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/process")
-},{"buffer":4,"oMfpAn":8}],9:[function(require,module,exports){
-(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-module.exports = function isBuffer(arg) {
-  return arg && typeof arg === 'object'
-    && typeof arg.copy === 'function'
-    && typeof arg.fill === 'function'
-    && typeof arg.readUInt8 === 'function';
-}
-}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/util/support/isBufferBrowser.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/util/support")
-},{"buffer":4,"oMfpAn":8}],10:[function(require,module,exports){
-(function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-// Copyright Joyent, Inc. and other Node contributors.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a
-// copy of this software and associated documentation files (the
-// "Software"), to deal in the Software without restriction, including
-// without limitation the rights to use, copy, modify, merge, publish,
-// distribute, sublicense, and/or sell copies of the Software, and to permit
-// persons to whom the Software is furnished to do so, subject to the
-// following conditions:
-//
-// The above copyright notice and this permission notice shall be included
-// in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
-// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
-// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
-// USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-var formatRegExp = /%[sdj%]/g;
-exports.format = function(f) {
-  if (!isString(f)) {
-    var objects = [];
-    for (var i = 0; i < arguments.length; i++) {
-      objects.push(inspect(arguments[i]));
-    }
-    return objects.join(' ');
-  }
-
-  var i = 1;
-  var args = arguments;
-  var len = args.length;
-  var str = String(f).replace(formatRegExp, function(x) {
-    if (x === '%%') return '%';
-    if (i >= len) return x;
-    switch (x) {
-      case '%s': return String(args[i++]);
-      case '%d': return Number(args[i++]);
-      case '%j':
-        try {
-          return JSON.stringify(args[i++]);
-        } catch (_) {
-          return '[Circular]';
-        }
-      default:
-        return x;
-    }
-  });
-  for (var x = args[i]; i < len; x = args[++i]) {
-    if (isNull(x) || !isObject(x)) {
-      str += ' ' + x;
-    } else {
-      str += ' ' + inspect(x);
-    }
-  }
-  return str;
-};
-
-
-// Mark that a method should not be used.
-// Returns a modified function which warns once by default.
-// If --no-deprecation is set, then it is a no-op.
-exports.deprecate = function(fn, msg) {
-  // Allow for deprecating things in the process of starting up.
-  if (isUndefined(global.process)) {
-    return function() {
-      return exports.deprecate(fn, msg).apply(this, arguments);
-    };
-  }
-
-  if (process.noDeprecation === true) {
-    return fn;
-  }
-
-  var warned = false;
-  function deprecated() {
-    if (!warned) {
-      if (process.throwDeprecation) {
-        throw new Error(msg);
-      } else if (process.traceDeprecation) {
-        console.trace(msg);
-      } else {
-        console.error(msg);
-      }
-      warned = true;
-    }
-    return fn.apply(this, arguments);
-  }
-
-  return deprecated;
-};
-
-
-var debugs = {};
-var debugEnviron;
-exports.debuglog = function(set) {
-  if (isUndefined(debugEnviron))
-    debugEnviron = process.env.NODE_DEBUG || '';
-  set = set.toUpperCase();
-  if (!debugs[set]) {
-    if (new RegExp('\\b' + set + '\\b', 'i').test(debugEnviron)) {
-      var pid = process.pid;
-      debugs[set] = function() {
-        var msg = exports.format.apply(exports, arguments);
-        console.error('%s %d: %s', set, pid, msg);
-      };
-    } else {
-      debugs[set] = function() {};
-    }
-  }
-  return debugs[set];
-};
-
-
-/**
- * Echos the value of a value. Trys to print the value out
- * in the best way possible given the different types.
- *
- * @param {Object} obj The object to print out.
- * @param {Object} opts Optional options object that alters the output.
- */
-/* legacy: obj, showHidden, depth, colors*/
-function inspect(obj, opts) {
-  // default options
-  var ctx = {
-    seen: [],
-    stylize: stylizeNoColor
-  };
-  // legacy...
-  if (arguments.length >= 3) ctx.depth = arguments[2];
-  if (arguments.length >= 4) ctx.colors = arguments[3];
-  if (isBoolean(opts)) {
-    // legacy...
-    ctx.showHidden = opts;
-  } else if (opts) {
-    // got an "options" object
-    exports._extend(ctx, opts);
-  }
-  // set default options
-  if (isUndefined(ctx.showHidden)) ctx.showHidden = false;
-  if (isUndefined(ctx.depth)) ctx.depth = 2;
-  if (isUndefined(ctx.colors)) ctx.colors = false;
-  if (isUndefined(ctx.customInspect)) ctx.customInspect = true;
-  if (ctx.colors) ctx.stylize = stylizeWithColor;
-  return formatValue(ctx, obj, ctx.depth);
-}
-exports.inspect = inspect;
-
-
-// http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
-inspect.colors = {
-  'bold' : [1, 22],
-  'italic' : [3, 23],
-  'underline' : [4, 24],
-  'inverse' : [7, 27],
-  'white' : [37, 39],
-  'grey' : [90, 39],
-  'black' : [30, 39],
-  'blue' : [34, 39],
-  'cyan' : [36, 39],
-  'green' : [32, 39],
-  'magenta' : [35, 39],
-  'red' : [31, 39],
-  'yellow' : [33, 39]
-};
-
-// Don't use 'blue' not visible on cmd.exe
-inspect.styles = {
-  'special': 'cyan',
-  'number': 'yellow',
-  'boolean': 'yellow',
-  'undefined': 'grey',
-  'null': 'bold',
-  'string': 'green',
-  'date': 'magenta',
-  // "name": intentionally not styling
-  'regexp': 'red'
-};
-
-
-function stylizeWithColor(str, styleType) {
-  var style = inspect.styles[styleType];
-
-  if (style) {
-    return '\u001b[' + inspect.colors[style][0] + 'm' + str +
-           '\u001b[' + inspect.colors[style][1] + 'm';
-  } else {
-    return str;
-  }
-}
-
-
-function stylizeNoColor(str, styleType) {
-  return str;
-}
-
-
-function arrayToHash(array) {
-  var hash = {};
-
-  array.forEach(function(val, idx) {
-    hash[val] = true;
-  });
-
-  return hash;
-}
-
-
-function formatValue(ctx, value, recurseTimes) {
-  // Provide a hook for user-specified inspect functions.
-  // Check that value is an object with an inspect function on it
-  if (ctx.customInspect &&
-      value &&
-      isFunction(value.inspect) &&
-      // Filter out the util module, it's inspect function is special
-      value.inspect !== exports.inspect &&
-      // Also filter out any prototype objects using the circular check.
-      !(value.constructor && value.constructor.prototype === value)) {
-    var ret = value.inspect(recurseTimes, ctx);
-    if (!isString(ret)) {
-      ret = formatValue(ctx, ret, recurseTimes);
-    }
-    return ret;
-  }
-
-  // Primitive types cannot have properties
-  var primitive = formatPrimitive(ctx, value);
-  if (primitive) {
-    return primitive;
-  }
-
-  // Look up the keys of the object.
-  var keys = Object.keys(value);
-  var visibleKeys = arrayToHash(keys);
-
-  if (ctx.showHidden) {
-    keys = Object.getOwnPropertyNames(value);
-  }
-
-  // IE doesn't make error fields non-enumerable
-  // http://msdn.microsoft.com/en-us/library/ie/dww52sbt(v=vs.94).aspx
-  if (isError(value)
-      && (keys.indexOf('message') >= 0 || keys.indexOf('description') >= 0)) {
-    return formatError(value);
-  }
-
-  // Some type of object without properties can be shortcutted.
-  if (keys.length === 0) {
-    if (isFunction(value)) {
-      var name = value.name ? ': ' + value.name : '';
-      return ctx.stylize('[Function' + name + ']', 'special');
-    }
-    if (isRegExp(value)) {
-      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
-    }
-    if (isDate(value)) {
-      return ctx.stylize(Date.prototype.toString.call(value), 'date');
-    }
-    if (isError(value)) {
-      return formatError(value);
-    }
-  }
-
-  var base = '', array = false, braces = ['{', '}'];
-
-  // Make Array say that they are Array
-  if (isArray(value)) {
-    array = true;
-    braces = ['[', ']'];
-  }
-
-  // Make functions say that they are functions
-  if (isFunction(value)) {
-    var n = value.name ? ': ' + value.name : '';
-    base = ' [Function' + n + ']';
-  }
-
-  // Make RegExps say that they are RegExps
-  if (isRegExp(value)) {
-    base = ' ' + RegExp.prototype.toString.call(value);
-  }
-
-  // Make dates with properties first say the date
-  if (isDate(value)) {
-    base = ' ' + Date.prototype.toUTCString.call(value);
-  }
-
-  // Make error with message first say the error
-  if (isError(value)) {
-    base = ' ' + formatError(value);
-  }
-
-  if (keys.length === 0 && (!array || value.length == 0)) {
-    return braces[0] + base + braces[1];
-  }
-
-  if (recurseTimes < 0) {
-    if (isRegExp(value)) {
-      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
-    } else {
-      return ctx.stylize('[Object]', 'special');
-    }
-  }
-
-  ctx.seen.push(value);
-
-  var output;
-  if (array) {
-    output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
-  } else {
-    output = keys.map(function(key) {
-      return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
-    });
-  }
-
-  ctx.seen.pop();
-
-  return reduceToSingleString(output, base, braces);
-}
-
-
-function formatPrimitive(ctx, value) {
-  if (isUndefined(value))
-    return ctx.stylize('undefined', 'undefined');
-  if (isString(value)) {
-    var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '')
-                                             .replace(/'/g, "\\'")
-                                             .replace(/\\"/g, '"') + '\'';
-    return ctx.stylize(simple, 'string');
-  }
-  if (isNumber(value))
-    return ctx.stylize('' + value, 'number');
-  if (isBoolean(value))
-    return ctx.stylize('' + value, 'boolean');
-  // For some reason typeof null is "object", so special case here.
-  if (isNull(value))
-    return ctx.stylize('null', 'null');
-}
-
-
-function formatError(value) {
-  return '[' + Error.prototype.toString.call(value) + ']';
-}
-
-
-function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
-  var output = [];
-  for (var i = 0, l = value.length; i < l; ++i) {
-    if (hasOwnProperty(value, String(i))) {
-      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
-          String(i), true));
-    } else {
-      output.push('');
-    }
-  }
-  keys.forEach(function(key) {
-    if (!key.match(/^\d+$/)) {
-      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
-          key, true));
-    }
-  });
-  return output;
-}
-
-
-function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
-  var name, str, desc;
-  desc = Object.getOwnPropertyDescriptor(value, key) || { value: value[key] };
-  if (desc.get) {
-    if (desc.set) {
-      str = ctx.stylize('[Getter/Setter]', 'special');
-    } else {
-      str = ctx.stylize('[Getter]', 'special');
-    }
-  } else {
-    if (desc.set) {
-      str = ctx.stylize('[Setter]', 'special');
-    }
-  }
-  if (!hasOwnProperty(visibleKeys, key)) {
-    name = '[' + key + ']';
-  }
-  if (!str) {
-    if (ctx.seen.indexOf(desc.value) < 0) {
-      if (isNull(recurseTimes)) {
-        str = formatValue(ctx, desc.value, null);
-      } else {
-        str = formatValue(ctx, desc.value, recurseTimes - 1);
-      }
-      if (str.indexOf('\n') > -1) {
-        if (array) {
-          str = str.split('\n').map(function(line) {
-            return '  ' + line;
-          }).join('\n').substr(2);
-        } else {
-          str = '\n' + str.split('\n').map(function(line) {
-            return '   ' + line;
-          }).join('\n');
-        }
-      }
-    } else {
-      str = ctx.stylize('[Circular]', 'special');
-    }
-  }
-  if (isUndefined(name)) {
-    if (array && key.match(/^\d+$/)) {
-      return str;
-    }
-    name = JSON.stringify('' + key);
-    if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
-      name = name.substr(1, name.length - 2);
-      name = ctx.stylize(name, 'name');
-    } else {
-      name = name.replace(/'/g, "\\'")
-                 .replace(/\\"/g, '"')
-                 .replace(/(^"|"$)/g, "'");
-      name = ctx.stylize(name, 'string');
-    }
-  }
-
-  return name + ': ' + str;
-}
-
-
-function reduceToSingleString(output, base, braces) {
-  var numLinesEst = 0;
-  var length = output.reduce(function(prev, cur) {
-    numLinesEst++;
-    if (cur.indexOf('\n') >= 0) numLinesEst++;
-    return prev + cur.replace(/\u001b\[\d\d?m/g, '').length + 1;
-  }, 0);
-
-  if (length > 60) {
-    return braces[0] +
-           (base === '' ? '' : base + '\n ') +
-           ' ' +
-           output.join(',\n  ') +
-           ' ' +
-           braces[1];
-  }
-
-  return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
-}
-
-
-// NOTE: These type checking functions intentionally don't use `instanceof`
-// because it is fragile and can be easily faked with `Object.create()`.
-function isArray(ar) {
-  return Array.isArray(ar);
-}
-exports.isArray = isArray;
-
-function isBoolean(arg) {
-  return typeof arg === 'boolean';
-}
-exports.isBoolean = isBoolean;
-
-function isNull(arg) {
-  return arg === null;
-}
-exports.isNull = isNull;
-
-function isNullOrUndefined(arg) {
-  return arg == null;
-}
-exports.isNullOrUndefined = isNullOrUndefined;
-
-function isNumber(arg) {
-  return typeof arg === 'number';
-}
-exports.isNumber = isNumber;
-
-function isString(arg) {
-  return typeof arg === 'string';
-}
-exports.isString = isString;
-
-function isSymbol(arg) {
-  return typeof arg === 'symbol';
-}
-exports.isSymbol = isSymbol;
-
-function isUndefined(arg) {
-  return arg === void 0;
-}
-exports.isUndefined = isUndefined;
-
-function isRegExp(re) {
-  return isObject(re) && objectToString(re) === '[object RegExp]';
-}
-exports.isRegExp = isRegExp;
-
-function isObject(arg) {
-  return typeof arg === 'object' && arg !== null;
-}
-exports.isObject = isObject;
-
-function isDate(d) {
-  return isObject(d) && objectToString(d) === '[object Date]';
-}
-exports.isDate = isDate;
-
-function isError(e) {
-  return isObject(e) &&
-      (objectToString(e) === '[object Error]' || e instanceof Error);
-}
-exports.isError = isError;
-
-function isFunction(arg) {
-  return typeof arg === 'function';
-}
-exports.isFunction = isFunction;
-
-function isPrimitive(arg) {
-  return arg === null ||
-         typeof arg === 'boolean' ||
-         typeof arg === 'number' ||
-         typeof arg === 'string' ||
-         typeof arg === 'symbol' ||  // ES6 symbol
-         typeof arg === 'undefined';
-}
-exports.isPrimitive = isPrimitive;
-
-exports.isBuffer = require('./support/isBuffer');
-
-function objectToString(o) {
-  return Object.prototype.toString.call(o);
-}
-
-
-function pad(n) {
-  return n < 10 ? '0' + n.toString(10) : n.toString(10);
-}
-
-
-var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
-              'Oct', 'Nov', 'Dec'];
-
-// 26 Feb 16:19:34
-function timestamp() {
-  var d = new Date();
-  var time = [pad(d.getHours()),
-              pad(d.getMinutes()),
-              pad(d.getSeconds())].join(':');
-  return [d.getDate(), months[d.getMonth()], time].join(' ');
-}
-
-
-// log is just a thin wrapper to console.log that prepends a timestamp
-exports.log = function() {
-  console.log('%s - %s', timestamp(), exports.format.apply(exports, arguments));
-};
-
-
-/**
- * Inherit the prototype methods from one constructor into another.
- *
- * The Function.prototype.inherits from lang.js rewritten as a standalone
- * function (not on Function.prototype). NOTE: If this file is to be loaded
- * during bootstrapping this function needs to be rewritten using some native
- * functions as prototype setup using normal JavaScript does not work as
- * expected during bootstrapping (see mirror.js in r114903).
- *
- * @param {function} ctor Constructor function which needs to inherit the
- *     prototype.
- * @param {function} superCtor Constructor function to inherit prototype from.
- */
-exports.inherits = require('inherits');
-
-exports._extend = function(origin, add) {
-  // Don't do anything if add isn't an object
-  if (!add || !isObject(add)) return origin;
-
-  var keys = Object.keys(add);
-  var i = keys.length;
-  while (i--) {
-    origin[keys[i]] = add[keys[i]];
-  }
-  return origin;
-};
-
-function hasOwnProperty(obj, prop) {
-  return Object.prototype.hasOwnProperty.call(obj, prop);
-}
-
-}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/util/util.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/util")
-},{"./support/isBuffer":9,"buffer":4,"inherits":7,"oMfpAn":8}],11:[function(require,module,exports){
+},{"buffer":4,"oMfpAn":7}],8:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*
  * @name Lazy.js
@@ -9671,13 +8976,13 @@ function hasOwnProperty(obj, prop) {
 }(this));
 
 }).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/lazy.js/lazy.js","/../../node_modules/lazy.js")
-},{"buffer":4,"oMfpAn":8}],12:[function(require,module,exports){
+},{"buffer":4,"oMfpAn":7}],9:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var cuid        = require('cuid'),
     pPolyfill   = require('es6-promise').polyfill(),
     Promise     = require('es6-promise').Promise,
     lazy        = require('lazy.js'),
-    copy        = require('deepcopy');
+    clone       = require('clone');
 
 cooldb = function cooldb() {
     // Production Array
@@ -9689,7 +8994,9 @@ cooldb = function cooldb() {
     // History
     var cdbHistory      = [];
     var bufferHistory   = 0;
-
+    // Callback time
+    var callbackTimer   = 0;
+    
     updateProps : function updateProps(source, dest) {
 
         return new Promise(function(resolve, reject){
@@ -9740,8 +9047,9 @@ cooldb = function cooldb() {
                 if (!params.hasOwnProperty('isArray'))
                     throw '[History] -> Key => [isArray] was not found';
                 
-                var gblHistoryCuid = cuid();
-                var singleItem = null;
+                var gblHistoryCuid  = cuid();
+                var singleItem      = null;
+                var interval        = null;
                 
                 // add
                 if (!params.isArray) {
@@ -9752,13 +9060,14 @@ cooldb = function cooldb() {
                     // Added
                     singleItem = { item: [{ old: params.old, new: params.new, action: params.action, hcuid: cuid() }],
                                    action: params.action,  hcuid: gblHistoryCuid };
+                    
                     cdbHistory.push(singleItem);
 
                     // Change Feed
                     if (changeFeedHCB != undefined) { 
                         setTimeout(function() {
-                            changeFeedHCB(singleItem); 
-                        }, 0);
+                            changeFeedHCB(singleItem);
+                        }, callbackTimer);
                     }
 
                     // Job Done !
@@ -9786,8 +9095,9 @@ cooldb = function cooldb() {
                     if (changeFeedHCB != undefined) { 
                         setTimeout(function() {
                             changeFeedHCB({ item: newItems, action: params.action, hcuid: gblHistoryCuid }); 
-                        }, 0);
+                        }, callbackTimer);
                     }
+                    
                     // Job Done !
                     resolve({ item: newItems, action: params.action, isArray: true, hcuid: gblHistoryCuid });
 
@@ -9934,14 +9244,13 @@ cooldb = function cooldb() {
                         if (changeFeedCB != undefined) { 
                             setTimeout(function() {
                                 changeFeedCB({ old: null, new: params.item, action: 'Inserted' }); 
-                            }, 0);
+                            }, callbackTimer);
                         }
                         // History
                         if (bufferHistory > 0 ) { 
-                            setTimeout(function() {
-                                addHistory({ item: params.item, new: params.item, action: 'Inserted', isArray: false }); 
-                            }, 0);
+                            addHistory({ item: clone(params.item), new: clone(params.item), action: 'Inserted', isArray: false });
                         }
+                        
                         // Resolve
                         resolve([{ old: null, new: params.item, action: 'Inserted' }]);
 
@@ -9959,15 +9268,13 @@ cooldb = function cooldb() {
                             if (changeFeedCB != undefined) {
                                 setTimeout(function() {
                                     changeFeedCB({ old: null, new: item, action: 'Inserted' }); 
-                                }, 0);
+                                }, callbackTimer);
                             }
                         });
                         
                         // History
                         if (bufferHistory > 0 ) { 
-                            setTimeout(function() {
-                                addHistory({ item: newItems, action: 'Inserted', isArray: true }); 
-                            }, 0);
+                            addHistory({ item: clone(newItems), action: 'Inserted', isArray: true });
                         }
                         
                         // Resolve
@@ -10034,7 +9341,7 @@ cooldb = function cooldb() {
                         if (changeFeedCB != undefined) { 
                             setTimeout(function() {
                                 changeFeedCB({ old: itemDeleted, new: null, action: 'Deleted' }); 
-                            }, 0);
+                            }, callbackTimer);
                         }
 
                         delItems.push({ old: itemDeleted, new: null, action: 'Deleted' });
@@ -10116,7 +9423,7 @@ cooldb = function cooldb() {
                                         if (changeFeedCB != undefined) { 
                                             setTimeout(function() {
                                                 changeFeedCB({ old: result.before, new: result.after, action: 'Updated' }); 
-                                            }, 0);
+                                            }, callbackTimer);
                                         }
                                     
                                         // Append to Updated Items
@@ -10126,9 +9433,8 @@ cooldb = function cooldb() {
                                         // History
                                         if (!isArray) {
                                             if (bufferHistory > 0) { 
-                                                setTimeout(function() {
-                                                    addHistory({ item: itemsFound.items[0], old: item.old, new: item.new, action: 'Updated', isArray: false }); 
-                                                }, 0);
+                                                addHistory({ item: clone(itemsFound.items[0]), old: clone(item.old), 
+                                                            new: clone(item.new), action: 'Updated', isArray: false }); 
                                             }
                                         }
                                     })
@@ -10137,9 +9443,7 @@ cooldb = function cooldb() {
                                         // History
                                         if (isArray) {
                                             if (bufferHistory > 0) { 
-                                                setTimeout(function() {
-                                                    addHistory({ item: itemsUpdated, old: null, new: null, action: 'Updated', isArray: true }); 
-                                                }, 0);
+                                                addHistory({ item: clone(itemsUpdated), old: null, new: null, action: 'Updated', isArray: true });
                                             }
                                         }
                                     
@@ -10182,7 +9486,7 @@ cooldb = function cooldb() {
                     if (changeFeedCB != undefined) { 
                         setTimeout(function() {
                             changeFeedCB({ old: null, new: null, action: 'Cleaned' }); 
-                        }, 0);
+                        }, callbackTimer);
                     }
                     // Resolve
                     resolve([{ old: null, new: null, action: 'Cleaned' }]);
@@ -10192,6 +9496,13 @@ cooldb = function cooldb() {
                 }
             });
         
+        },
+        
+        setTimer: function setTimer(timer) {
+            if (typeof timer === "number")
+                callbackTimer = timer;
+            else
+                throw 'timer should be numeric.';
         },
         
         changeFeedHistory: function changeFeedHistory(fn) {
@@ -10231,5 +9542,5 @@ cooldb = function cooldb() {
 };
 
 module.exports = cooldb;
-}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_732de7b9.js","/")
-},{"buffer":4,"cuid":1,"deepcopy":2,"es6-promise":3,"lazy.js":11,"oMfpAn":8}]},{},[12])
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_e416c92.js","/")
+},{"buffer":4,"clone":1,"cuid":2,"es6-promise":3,"lazy.js":8,"oMfpAn":7}]},{},[9])
