@@ -94,7 +94,7 @@ cooldb = function cooldb() {
                     resolve({ item: params.item, action: params.action, isArray: false, hcuid: gblHistoryCuid });
 
                 } else if (params.isArray){
-                    
+
                     //>> Track Additions
                     var newItems = [];
                     //>> add Array
@@ -102,6 +102,7 @@ cooldb = function cooldb() {
                         
                         var tempNew = (item.hasOwnProperty('new')) ? item.new : null,
                             tempOld = (item.hasOwnProperty('old')) ? item.old : null;
+                        tempOld = (params.action === 'Cleaned') ? item : tempOld;
                         
                         singleItem = { old: tempOld, new: tempNew, action: params.action, hcuid: cuid() };
                         // Added
@@ -367,6 +368,17 @@ cooldb = function cooldb() {
                         delItems.push({ old: itemDeleted, new: null, action: 'Deleted' });
                     }
                 
+                    // History
+                    if (bufferHistory > 0 ) { 
+                        if (!Array.isArray(itemDeleted)) {
+                            addHistory({ item: clone(itemDeleted), old: clone(itemDeleted), action: 'Deleted', isArray: false });
+                        } else if (Array.isArray(itemDeleted)) {
+                            if (bufferHistory > 0 ) { 
+                                addHistory({ item: clone(itemDeleted), old: clone(itemDeleted), action: 'Deleted', isArray: true });
+                            }
+                        }
+                    }
+                    
                     resolve(delItems);
 
                 } catch (err) {
@@ -501,13 +513,25 @@ cooldb = function cooldb() {
             
             return new Promise(function(resolve, reject) {
                 try {
+                    
+                    var cdbTemp = null;
+                    if (bufferHistory > 0)
+                        cdbTemp = clone(cdb);
+                    
                     cdb = [];
+                    
                     // Change Feed
                     if (changeFeedCB != undefined) { 
                         setTimeout(function() {
                             changeFeedCB({ old: null, new: null, action: 'Cleaned' }); 
                         }, callbackTimer);
                     }
+                    
+                    // History
+                    if (bufferHistory > 0 ) { 
+                        addHistory({ item: cdbTemp, action: 'Cleaned', isArray: true });
+                    }
+                    
                     // Resolve
                     resolve([{ old: null, new: null, action: 'Cleaned' }]);
                 } catch (err) {
@@ -518,7 +542,7 @@ cooldb = function cooldb() {
         
         },
         
-        setTimer: function setTimer(timer) {
+        setCbTimer: function setCbTimer(timer) {
             if (typeof timer === "number")
                 callbackTimer = timer;
             else
@@ -536,7 +560,7 @@ cooldb = function cooldb() {
                 
 		},
         
-        setHistory: function setHistory(buffer) {
+        setBufferHistory: function setBufferHistory(buffer) {
             if (typeof buffer === "number")
                 bufferHistory = buffer;
             else
@@ -555,7 +579,7 @@ cooldb = function cooldb() {
             });
             
             return this;
-        },
+        }
         
     };
     

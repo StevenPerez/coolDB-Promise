@@ -2,9 +2,9 @@ var coolDb = cooldb,
     coolDB = coolDb();
 
 coolDB.changeFeed(function(result){
-    console.log('PROD CHANGE FEED');
-    console.log(result);
-    console.log('=======================');
+    //console.log('PROD CHANGE FEED');
+    //console.log(result);
+    //console.log('=======================');
 });
 
 /*
@@ -87,7 +87,7 @@ console.log( coolDB.clone()._result );
 
 // HISTORY
 
-coolDB.setHistory(3);
+coolDB.setBufferHistory(2);
 
 coolDB.changeFeedHistory(function(result){
     console.log('HISTORY CHANGE FEED');
@@ -133,12 +133,56 @@ coolDB.add({ item: { name: 'Jane' } })
 
 
 /* UPDATE */
-
+/*
 coolDB.add({ item: { name: 'Jhon' } })
     .then()
     .then(function (){
 
             coolDB.update({ key: 'cuid', value: coolDB.db()._result[0].cuid, item: { name: 'abc' } })
+                  .then(function(result) {
+
+                    console.log( coolDB.db()._result );
+                    console.log( coolDB.history()._result );
+
+                  })
+                  .catch(function(err){
+                    console.log(err);
+                  });
+
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
+*/
+/* DELETE */
+/*
+coolDB.add({ item: { name: 'Jhon' } })
+    .then()
+    .then(function (){
+
+            coolDB.del({ key: 'cuid', value: coolDB.db()._result[0].cuid })
+                  .then(function(result) {
+
+                    console.log( coolDB.db()._result );
+                    console.log( coolDB.history()._result );
+
+                  })
+                  .catch(function(err){
+                    console.log(err);
+                  });
+
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
+*/
+
+/* CLEAN */
+coolDB.add({ item: { name: 'Jhon' } })
+    .then()
+    .then(function (){
+
+            coolDB.clean()
                   .then(function(result) {
 
                     console.log( coolDB.db()._result );
