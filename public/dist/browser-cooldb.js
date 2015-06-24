@@ -111,8 +111,8 @@
 
 }(this.applitude || this));
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\cuid\\dist\\browser-cuid.js","/..\\..\\node_modules\\cuid\\dist")
-},{"buffer":4,"ngpmcQ":8}],2:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/cuid/dist/browser-cuid.js","/../../node_modules/cuid/dist")
+},{"buffer":4,"oMfpAn":8}],2:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*!
  * @license deepcopy.js Copyright(c) 2013 sasa+1
@@ -344,15 +344,15 @@
   return deepcopy;
 }));
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\deepcopy\\deepcopy.js","/..\\..\\node_modules\\deepcopy")
-},{"buffer":4,"ngpmcQ":8,"util":10}],3:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/deepcopy/deepcopy.js","/../../node_modules/deepcopy")
+},{"buffer":4,"oMfpAn":8,"util":10}],3:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*!
  * @overview es6-promise - a tiny implementation of Promises/A+.
  * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
  * @license   Licensed under MIT license
  *            See https://raw.githubusercontent.com/jakearchibald/es6-promise/master/LICENSE
- * @version   2.3.0
+ * @version   2.1.1
  */
 
 (function() {
@@ -382,9 +382,7 @@
     var lib$es6$promise$asap$$len = 0;
     var lib$es6$promise$asap$$toString = {}.toString;
     var lib$es6$promise$asap$$vertxNext;
-    var lib$es6$promise$asap$$customSchedulerFn;
-
-    var lib$es6$promise$asap$$asap = function asap(callback, arg) {
+    function lib$es6$promise$asap$$asap(callback, arg) {
       lib$es6$promise$asap$$queue[lib$es6$promise$asap$$len] = callback;
       lib$es6$promise$asap$$queue[lib$es6$promise$asap$$len + 1] = arg;
       lib$es6$promise$asap$$len += 2;
@@ -392,21 +390,11 @@
         // If len is 2, that means that we need to schedule an async flush.
         // If additional callbacks are queued before the queue is flushed, they
         // will be processed by this flush that we are scheduling.
-        if (lib$es6$promise$asap$$customSchedulerFn) {
-          lib$es6$promise$asap$$customSchedulerFn(lib$es6$promise$asap$$flush);
-        } else {
-          lib$es6$promise$asap$$scheduleFlush();
-        }
+        lib$es6$promise$asap$$scheduleFlush();
       }
     }
 
-    function lib$es6$promise$asap$$setScheduler(scheduleFn) {
-      lib$es6$promise$asap$$customSchedulerFn = scheduleFn;
-    }
-
-    function lib$es6$promise$asap$$setAsap(asapFn) {
-      lib$es6$promise$asap$$asap = asapFn;
-    }
+    var lib$es6$promise$asap$$default = lib$es6$promise$asap$$asap;
 
     var lib$es6$promise$asap$$browserWindow = (typeof window !== 'undefined') ? window : undefined;
     var lib$es6$promise$asap$$browserGlobal = lib$es6$promise$asap$$browserWindow || {};
@@ -539,7 +527,7 @@
     }
 
     function lib$es6$promise$$internal$$handleForeignThenable(promise, thenable, then) {
-       lib$es6$promise$asap$$asap(function(promise) {
+       lib$es6$promise$asap$$default(function(promise) {
         var sealed = false;
         var error = lib$es6$promise$$internal$$tryThen(then, thenable, function(value) {
           if (sealed) { return; }
@@ -620,7 +608,7 @@
       promise._state = lib$es6$promise$$internal$$FULFILLED;
 
       if (promise._subscribers.length !== 0) {
-        lib$es6$promise$asap$$asap(lib$es6$promise$$internal$$publish, promise);
+        lib$es6$promise$asap$$default(lib$es6$promise$$internal$$publish, promise);
       }
     }
 
@@ -629,7 +617,7 @@
       promise._state = lib$es6$promise$$internal$$REJECTED;
       promise._result = reason;
 
-      lib$es6$promise$asap$$asap(lib$es6$promise$$internal$$publishRejection, promise);
+      lib$es6$promise$asap$$default(lib$es6$promise$$internal$$publishRejection, promise);
     }
 
     function lib$es6$promise$$internal$$subscribe(parent, child, onFulfillment, onRejection) {
@@ -643,7 +631,7 @@
       subscribers[length + lib$es6$promise$$internal$$REJECTED]  = onRejection;
 
       if (length === 0 && parent._state) {
-        lib$es6$promise$asap$$asap(lib$es6$promise$$internal$$publish, parent);
+        lib$es6$promise$asap$$default(lib$es6$promise$$internal$$publish, parent);
       }
     }
 
@@ -900,7 +888,7 @@
     /**
       Promise objects represent the eventual result of an asynchronous operation. The
       primary way of interacting with a promise is through its `then` method, which
-      registers callbacks to receive either a promise's eventual value or the reason
+      registers callbacks to receive either a promise’s eventual value or the reason
       why the promise cannot be fulfilled.
 
       Terminology
@@ -1023,9 +1011,6 @@
     lib$es6$promise$promise$$Promise.race = lib$es6$promise$promise$race$$default;
     lib$es6$promise$promise$$Promise.resolve = lib$es6$promise$promise$resolve$$default;
     lib$es6$promise$promise$$Promise.reject = lib$es6$promise$promise$reject$$default;
-    lib$es6$promise$promise$$Promise._setScheduler = lib$es6$promise$asap$$setScheduler;
-    lib$es6$promise$promise$$Promise._setAsap = lib$es6$promise$asap$$setAsap;
-    lib$es6$promise$promise$$Promise._asap = lib$es6$promise$asap$$asap;
 
     lib$es6$promise$promise$$Promise.prototype = {
       constructor: lib$es6$promise$promise$$Promise,
@@ -1236,7 +1221,7 @@
 
         if (state) {
           var callback = arguments[state - 1];
-          lib$es6$promise$asap$$asap(function(){
+          lib$es6$promise$asap$$default(function(){
             lib$es6$promise$$internal$$invokeCallback(state, child, callback, result);
           });
         } else {
@@ -1320,8 +1305,8 @@
 }).call(this);
 
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\es6-promise\\dist\\es6-promise.js","/..\\..\\node_modules\\es6-promise\\dist")
-},{"buffer":4,"ngpmcQ":8}],4:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/es6-promise/dist/es6-promise.js","/../../node_modules/es6-promise/dist")
+},{"buffer":4,"oMfpAn":8}],4:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*!
  * The buffer module from node.js, for the browser.
@@ -2433,8 +2418,8 @@ function assert (test, message) {
   if (!test) throw new Error(message || 'Failed assertion')
 }
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\buffer\\index.js","/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\buffer")
-},{"base64-js":5,"buffer":4,"ieee754":6,"ngpmcQ":8}],5:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/index.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer")
+},{"base64-js":5,"buffer":4,"ieee754":6,"oMfpAn":8}],5:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
@@ -2561,96 +2546,96 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\buffer\\node_modules\\base64-js\\lib\\b64.js","/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\buffer\\node_modules\\base64-js\\lib")
-},{"buffer":4,"ngpmcQ":8}],6:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib/b64.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib")
+},{"buffer":4,"oMfpAn":8}],6:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-  var e, m
-  var eLen = nBytes * 8 - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var nBits = -7
-  var i = isLE ? (nBytes - 1) : 0
-  var d = isLE ? -1 : 1
-  var s = buffer[offset + i]
+exports.read = function(buffer, offset, isLE, mLen, nBytes) {
+  var e, m,
+      eLen = nBytes * 8 - mLen - 1,
+      eMax = (1 << eLen) - 1,
+      eBias = eMax >> 1,
+      nBits = -7,
+      i = isLE ? (nBytes - 1) : 0,
+      d = isLE ? -1 : 1,
+      s = buffer[offset + i];
 
-  i += d
+  i += d;
 
-  e = s & ((1 << (-nBits)) - 1)
-  s >>= (-nBits)
-  nBits += eLen
-  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+  e = s & ((1 << (-nBits)) - 1);
+  s >>= (-nBits);
+  nBits += eLen;
+  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8);
 
-  m = e & ((1 << (-nBits)) - 1)
-  e >>= (-nBits)
-  nBits += mLen
-  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+  m = e & ((1 << (-nBits)) - 1);
+  e >>= (-nBits);
+  nBits += mLen;
+  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8);
 
   if (e === 0) {
-    e = 1 - eBias
+    e = 1 - eBias;
   } else if (e === eMax) {
-    return m ? NaN : ((s ? -1 : 1) * Infinity)
+    return m ? NaN : ((s ? -1 : 1) * Infinity);
   } else {
-    m = m + Math.pow(2, mLen)
-    e = e - eBias
+    m = m + Math.pow(2, mLen);
+    e = e - eBias;
   }
-  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
-}
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen);
+};
 
-exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c
-  var eLen = nBytes * 8 - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
-  var i = isLE ? 0 : (nBytes - 1)
-  var d = isLE ? 1 : -1
-  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
+  var e, m, c,
+      eLen = nBytes * 8 - mLen - 1,
+      eMax = (1 << eLen) - 1,
+      eBias = eMax >> 1,
+      rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0),
+      i = isLE ? 0 : (nBytes - 1),
+      d = isLE ? 1 : -1,
+      s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0;
 
-  value = Math.abs(value)
+  value = Math.abs(value);
 
   if (isNaN(value) || value === Infinity) {
-    m = isNaN(value) ? 1 : 0
-    e = eMax
+    m = isNaN(value) ? 1 : 0;
+    e = eMax;
   } else {
-    e = Math.floor(Math.log(value) / Math.LN2)
+    e = Math.floor(Math.log(value) / Math.LN2);
     if (value * (c = Math.pow(2, -e)) < 1) {
-      e--
-      c *= 2
+      e--;
+      c *= 2;
     }
     if (e + eBias >= 1) {
-      value += rt / c
+      value += rt / c;
     } else {
-      value += rt * Math.pow(2, 1 - eBias)
+      value += rt * Math.pow(2, 1 - eBias);
     }
     if (value * c >= 2) {
-      e++
-      c /= 2
+      e++;
+      c /= 2;
     }
 
     if (e + eBias >= eMax) {
-      m = 0
-      e = eMax
+      m = 0;
+      e = eMax;
     } else if (e + eBias >= 1) {
-      m = (value * c - 1) * Math.pow(2, mLen)
-      e = e + eBias
+      m = (value * c - 1) * Math.pow(2, mLen);
+      e = e + eBias;
     } else {
-      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
-      e = 0
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen);
+      e = 0;
     }
   }
 
-  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8);
 
-  e = (e << mLen) | m
-  eLen += mLen
-  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+  e = (e << mLen) | m;
+  eLen += mLen;
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8);
 
-  buffer[offset + i - d] |= s * 128
-}
+  buffer[offset + i - d] |= s * 128;
+};
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\buffer\\node_modules\\ieee754\\index.js","/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\buffer\\node_modules\\ieee754")
-},{"buffer":4,"ngpmcQ":8}],7:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/ieee754/index.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/ieee754")
+},{"buffer":4,"oMfpAn":8}],7:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
@@ -2676,8 +2661,8 @@ if (typeof Object.create === 'function') {
   }
 }
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\inherits\\inherits_browser.js","/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\inherits")
-},{"buffer":4,"ngpmcQ":8}],8:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/inherits/inherits_browser.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/inherits")
+},{"buffer":4,"oMfpAn":8}],8:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 // shim for using process in browser
 
@@ -2743,8 +2728,8 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\process\\browser.js","/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\process")
-},{"buffer":4,"ngpmcQ":8}],9:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/process/browser.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/process")
+},{"buffer":4,"oMfpAn":8}],9:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
@@ -2752,8 +2737,8 @@ module.exports = function isBuffer(arg) {
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\util\\support\\isBufferBrowser.js","/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\util\\support")
-},{"buffer":4,"ngpmcQ":8}],10:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/util/support/isBufferBrowser.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/util/support")
+},{"buffer":4,"oMfpAn":8}],10:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -3342,8 +3327,8 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\util\\util.js","/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\util")
-},{"./support/isBuffer":9,"buffer":4,"inherits":7,"ngpmcQ":8}],11:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/util/util.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/util")
+},{"./support/isBuffer":9,"buffer":4,"inherits":7,"oMfpAn":8}],11:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*
  * @name Lazy.js
@@ -9685,8 +9670,8 @@ function hasOwnProperty(obj, prop) {
 
 }(this));
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\lazy.js\\lazy.js","/..\\..\\node_modules\\lazy.js")
-},{"buffer":4,"ngpmcQ":8}],12:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/lazy.js/lazy.js","/../../node_modules/lazy.js")
+},{"buffer":4,"oMfpAn":8}],12:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var cuid        = require('cuid'),
     pPolyfill   = require('es6-promise').polyfill(),
@@ -9754,47 +9739,46 @@ cooldb = function cooldb() {
                     lazy(cdbHistory).shift();
                 }
                 
+                var gblHistoryCuid = cuid();
+                var singleItem = null;
                 // add
                 if (!Array.isArray(params.item)) {
-                    console.log('NOT ARRAY');
-                    //>> add hcuid Property
-                    if (!params.item.hasOwnProperty('hcuid')) params.item.hcuid = cuid();
-
                     // Added
-                    cdbHistory.push({ item: params.item, action: 'Inserted', isArray: false });
+                    singleItem = { item: [{ old: null, new: params.item, action: 'Inserted', hcuid: cuid() }], action: 'Inserted',  hcuid: gblHistoryCuid };
+                    cdbHistory.push(singleItem);
 
                     // Change Feed
                     if (changeFeedHCB != undefined) { 
                         setTimeout(function() {
-                            changeFeedHCB({ item: params.item, action: 'Inserted', isArray: true }); 
+                            changeFeedHCB(singleItem); 
                         }, 0);
                     }
 
                     // Job Done !
-                    resolve({ item: params.item, action: 'Inserted', isArray: false });
+                    resolve({ item: params.item, action: 'Inserted', isArray: false, hcuid: gblHistoryCuid });
 
                 } else if (Array.isArray(params.item)){
-                    console.log('ARRAY');
+                    
                     //>> Track Additions
                     var newItems = [];
                     //>> add Array
                     params.item.forEach(function(item) {
-                        if (!item.hasOwnProperty('hcuid')) item.hcuid = cuid();
+                        singleItem = { old: null, new: item, action: 'Inserted', hcuid: cuid() };
                         // Added
-                        newItems.push(item);
+                        newItems.push(singleItem);
                     });
                     
                     // Added
-                    cdbHistory.push({ item: newItems, action: 'Inserted', isArray: true });
+                    cdbHistory.push({ item: newItems, action: 'Inserted', hcuid: gblHistoryCuid });
                     
                     // Change Feed
                     if (changeFeedHCB != undefined) { 
                         setTimeout(function() {
-                            changeFeedHCB({ item: newItems, action: 'Inserted', isArray: true }); 
+                            changeFeedHCB({ item: newItems, action: 'Inserted', hcuid: gblHistoryCuid }); 
                         }, 0);
                     }
                     // Job Done !
-                    resolve({ item: newItems, action: 'Inserted', isArray: true });
+                    resolve({ item: newItems, action: 'Inserted', isArray: true, hcuid: gblHistoryCuid });
 
                 } else {
                     throw '[History] -> item parameter should correspond to an Object or Array.';
@@ -9939,7 +9923,7 @@ cooldb = function cooldb() {
                         // History
                         if (bufferHistory > 0 ) { 
                             setTimeout(function() {
-                                addHistory({ item: copy(params.item) }); 
+                                addHistory({ item: params.item }); 
                             }, 0);
                         }
                         // Resolve
@@ -9947,13 +9931,16 @@ cooldb = function cooldb() {
 
                     } else if (Array.isArray(params.item)){
                         //>> Track Additions
-                        var newItems = [];
+                        var newItems        = [];
+                        var newHistoryItems = [];
                         //>> add Array
                         params.item.forEach(function(item) {
                             if (!item.hasOwnProperty('cuid')) item.cuid = cuid();
                             // Added
                             cdb.push(item);
                             newItems.push({ old: null, new: item, action: 'Inserted' });
+                            newHistoryItems.push(item);
+                            
                             // Change Feed
                             if (changeFeedCB != undefined) {
                                 setTimeout(function() {
@@ -9965,7 +9952,7 @@ cooldb = function cooldb() {
                         // History
                         if (bufferHistory > 0 ) { 
                             setTimeout(function() {
-                                addHistory({ item: copy(newItems) }); 
+                                addHistory({ item: newHistoryItems }); 
                             }, 0);
                         }
                         
@@ -10188,8 +10175,6 @@ cooldb = function cooldb() {
             
             return new Promise(function(resolve, reject) {
                 try {
-                    cdbHistory.push({});
-                    lazy(cdbHistory).shift();
                     resolve(cdbHistory);
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
@@ -10205,5 +10190,5 @@ cooldb = function cooldb() {
 };
 
 module.exports = cooldb;
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_7217b8bc.js","/")
-},{"buffer":4,"cuid":1,"deepcopy":2,"es6-promise":3,"lazy.js":11,"ngpmcQ":8}]},{},[12])
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_71f76fa0.js","/")
+},{"buffer":4,"cuid":1,"deepcopy":2,"es6-promise":3,"lazy.js":11,"oMfpAn":8}]},{},[12])

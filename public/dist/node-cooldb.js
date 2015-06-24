@@ -64,47 +64,46 @@ cooldb = function cooldb() {
                     lazy(cdbHistory).shift();
                 }
                 
+                var gblHistoryCuid = cuid();
+                var singleItem = null;
                 // add
                 if (!Array.isArray(params.item)) {
-                    console.log('NOT ARRAY');
-                    //>> add hcuid Property
-                    if (!params.item.hasOwnProperty('hcuid')) params.item.hcuid = cuid();
-
                     // Added
-                    cdbHistory.push({ item: params.item, action: 'Inserted', isArray: false });
+                    singleItem = { item: [{ old: null, new: params.item, action: 'Inserted', hcuid: cuid() }], action: 'Inserted',  hcuid: gblHistoryCuid };
+                    cdbHistory.push(singleItem);
 
                     // Change Feed
                     if (changeFeedHCB != undefined) { 
                         setTimeout(function() {
-                            changeFeedHCB({ item: params.item, action: 'Inserted', isArray: true }); 
+                            changeFeedHCB(singleItem); 
                         }, 0);
                     }
 
                     // Job Done !
-                    resolve({ item: params.item, action: 'Inserted', isArray: false });
+                    resolve({ item: params.item, action: 'Inserted', isArray: false, hcuid: gblHistoryCuid });
 
                 } else if (Array.isArray(params.item)){
-                    console.log('ARRAY');
+                    
                     //>> Track Additions
                     var newItems = [];
                     //>> add Array
                     params.item.forEach(function(item) {
-                        if (!item.hasOwnProperty('hcuid')) item.hcuid = cuid();
+                        singleItem = { old: null, new: item, action: 'Inserted', hcuid: cuid() };
                         // Added
-                        newItems.push(item);
+                        newItems.push(singleItem);
                     });
                     
                     // Added
-                    cdbHistory.push({ item: newItems, action: 'Inserted', isArray: true });
+                    cdbHistory.push({ item: newItems, action: 'Inserted', hcuid: gblHistoryCuid });
                     
                     // Change Feed
                     if (changeFeedHCB != undefined) { 
                         setTimeout(function() {
-                            changeFeedHCB({ item: newItems, action: 'Inserted', isArray: true }); 
+                            changeFeedHCB({ item: newItems, action: 'Inserted', hcuid: gblHistoryCuid }); 
                         }, 0);
                     }
                     // Job Done !
-                    resolve({ item: newItems, action: 'Inserted', isArray: true });
+                    resolve({ item: newItems, action: 'Inserted', isArray: true, hcuid: gblHistoryCuid });
 
                 } else {
                     throw '[History] -> item parameter should correspond to an Object or Array.';
@@ -249,7 +248,7 @@ cooldb = function cooldb() {
                         // History
                         if (bufferHistory > 0 ) { 
                             setTimeout(function() {
-                                addHistory({ item: copy(params.item) }); 
+                                addHistory({ item: params.item }); 
                             }, 0);
                         }
                         // Resolve
@@ -257,13 +256,16 @@ cooldb = function cooldb() {
 
                     } else if (Array.isArray(params.item)){
                         //>> Track Additions
-                        var newItems = [];
+                        var newItems        = [];
+                        var newHistoryItems = [];
                         //>> add Array
                         params.item.forEach(function(item) {
                             if (!item.hasOwnProperty('cuid')) item.cuid = cuid();
                             // Added
                             cdb.push(item);
                             newItems.push({ old: null, new: item, action: 'Inserted' });
+                            newHistoryItems.push(item);
+                            
                             // Change Feed
                             if (changeFeedCB != undefined) {
                                 setTimeout(function() {
@@ -275,7 +277,7 @@ cooldb = function cooldb() {
                         // History
                         if (bufferHistory > 0 ) { 
                             setTimeout(function() {
-                                addHistory({ item: copy(newItems) }); 
+                                addHistory({ item: newHistoryItems }); 
                             }, 0);
                         }
                         
@@ -498,8 +500,6 @@ cooldb = function cooldb() {
             
             return new Promise(function(resolve, reject) {
                 try {
-                    cdbHistory.push({});
-                    lazy(cdbHistory).shift();
                     resolve(cdbHistory);
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;

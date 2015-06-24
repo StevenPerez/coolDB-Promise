@@ -2,38 +2,10 @@ var coolDb = cooldb,
     coolDB = coolDb();
 
 coolDB.changeFeed(function(result){
-    //console.log(result);
-});
-
-coolDB.setHistory(2);
-
-coolDB.changeFeedHistory(function(result){
-    console.log('CHANGE FEED');
+    console.log('PROD CHANGE FEED');
     console.log(result);
     console.log('=======================');
 });
-
-
-
-coolDB.add({ item: { name: 'Mary' } })
-    .then(function(result) {
-        //console.log(result);
-        console.log( coolDB.db()._result );
-        console.log( coolDB.history()._result );
-    })
-    .catch(function(err) {
-        console.log(err);
-    });
-
-/*
-coolDB.history()
-        .then(function (a) {
-            console.log(a);
-        })
-        .catch(function(err){
-            console.log(err);
-        });
-*/
 
 /*
 // *** Insert Single ***
@@ -112,3 +84,40 @@ console.log( coolDB.clone()._result );
 
 // DB
 //console.log( coolDB.db()._result );
+
+// HISTORY
+
+coolDB.setHistory(2);
+
+coolDB.changeFeedHistory(function(result){
+    console.log('HISTORY CHANGE FEED');
+    console.log(result);
+    console.log('=======================');
+});
+
+/* Add one */
+
+coolDB.add({ item: { name: 'Jhon' } })
+    .then(function(result) {
+        var inter = setInterval(function() {
+            clearInterval(inter);
+            console.log( coolDB.db()._result );
+            console.log( coolDB.history()._result );
+        }, 100);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
+
+
+coolDB.add({ item: [{ name: 'Mary' }, { name: 'Yorle' }, { name: 'Samantha' } ] })
+    .then(function(result) {
+        var inter = setInterval(function() {
+            clearInterval(inter);
+            console.log( coolDB.db()._result );
+            console.log( coolDB.history()._result );
+        }, 100);
+    })
+    .catch(function(err) {
+        console.log(err);
+    });
