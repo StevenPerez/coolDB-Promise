@@ -598,3 +598,52 @@ coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
             console.log(err);
         });
 */
+
+/* AJAX */
+
+/* POST CUID */
+/*
+function postCuidDemo() {
+    
+    var itemCuid = coolDB.db()._result[0].cuid;
+    
+    coolDB.postCuid({ url: '/postUrl', cuid: itemCuid, json: true }) 
+          .then(function(success){
+            console.log( success );
+          })
+          .catch(function(err){
+            console.log( err );
+          });
+}
+
+coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
+        .then(postCuidDemo)
+        .catch(function(err){
+            console.log(err);
+        });
+        
+*/
+
+/* GET CUID */
+/*
+
+function getCuidDemo() {
+    
+    var itemCuid = coolDB.db()._result[0].cuid;
+
+    coolDB.getCuid({ url: '/getUrl', cuid: itemCuid, json: false }) 
+          .then(function(success){
+            console.log( success );
+          })
+          .catch(function(err){
+            console.log( err );
+          });
+}
+
+coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
+        .then(getCuidDemo)
+        .catch(function(err){
+            console.log(err);
+        });
+        
+*/

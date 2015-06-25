@@ -2,14 +2,15 @@ var cuid        = require('cuid'),
     pPolyfill   = require('es6-promise').polyfill(),
     Promise     = require('es6-promise').Promise,
     lazy        = require('lazy.js'),
-    clone       = require('clone');
+    clone       = require('clone'),
+    axios       = require('axios');
 
 cooldb = function cooldb() {
     
     (this.hasOwnProperty('global')) ? global.Promise = Promise : window.Promise = Promise;
     (this.hasOwnProperty('global')) ? global.clone = clone : window.clone = clone;
     (this.hasOwnProperty('global')) ? global.lazy = lazy : window.lazy = lazy;
-    (this.hasOwnProperty('global')) ? global.cuid = cuid : window.cuid = cuid;
+    (this.hasOwnProperty('global')) ? global.axios = axios : window.axios = axios;
     
     // Production Array
     var cdb             = [];
@@ -148,6 +149,8 @@ cooldb = function cooldb() {
     }
     
     return {
+        
+        // >> Production <<
         
         changeFeed: function changeFeed(fn) {
             
@@ -573,6 +576,8 @@ cooldb = function cooldb() {
             else
                 throw 'timer should be numeric.';
         },
+
+        // >> History <<
         
         changeFeedHistory: function changeFeedHistory(fn) {
             
@@ -688,6 +693,101 @@ cooldb = function cooldb() {
                             return;
                         }
                     });
+                    
+                } catch (err) {
+                    var msg = (err.hasOwnProperty('message')) ? err.message : err;
+                    reject(new Error( msg ));
+                }
+            });
+        },
+        
+        // >> Ajax <<
+        
+        postCuid: function postCuid(params) {
+            
+            var $this = this;
+            
+            return new Promise(function(resolve, reject) {
+                try {
+                    
+                    params      = params || {};
+                    params.json = params.json || false;
+                    
+                    if (!params.hasOwnProperty('url'))
+                        throw 'url property not found.';
+                    
+                    if (!params.hasOwnProperty('cuid'))
+                        throw 'cuid property not found.';
+                    
+                    $this.get({ key: 'cuid', value: params.cuid })
+                        .then(function(response){
+                        
+                            if (response.count > 0) {
+                                
+                                var item = null;
+                                if (!params.json)
+                                    item = clone( response.items[0] );
+                                else
+                                    item = JSON.stringify(clone( response.items[0] ));
+                                
+                                axios.post(params.url, item)
+                                     .then(function(success){ resolve(success); })
+                                     .catch(function(err){ reject(err); });
+                                
+                            } else {
+                                throw 'No item found for cuid [ ' + params.cuid + ' ]';
+                            }
+                            
+                        })
+                        .catch(function(err){
+                            reject(err);
+                        });
+                    
+                } catch (err) {
+                    var msg = (err.hasOwnProperty('message')) ? err.message : err;
+                    reject(new Error( msg ));
+                }
+            });
+        },
+        
+        getCuid: function getCuid(params) {
+            
+            var $this = this;
+            
+            return new Promise(function(resolve, reject) {
+                try {
+                    
+                    params = params || {};
+                    
+                    if (!params.hasOwnProperty('url'))
+                        throw 'url property not found.';
+                    
+                    if (!params.hasOwnProperty('cuid'))
+                        throw 'cuid property not found.';
+                    
+                    $this.get({ key: 'cuid', value: params.cuid })
+                        .then(function(response){
+                        
+                            if (response.count > 0) {
+                                
+                                var item = null;
+                                if (!params.json)
+                                    item = clone( response.items[0] );
+                                else
+                                    item = JSON.stringify(clone( response.items[0] ));
+                                
+                                axios.get(params.url, { params: item })
+                                     .then(function(success){ resolve(success); })
+                                     .catch(function(err){ reject(err); });
+                                
+                            } else {
+                                throw 'No item found for cuid [ ' + params.cuid + ' ]';
+                            }
+                            
+                        })
+                        .catch(function(err){
+                            reject(err);
+                        });
                     
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;

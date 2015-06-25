@@ -12,7 +12,7 @@ coolDB.changeFeed(function(result){
     console.log(result);
 });
 
-
+/*
 // *** Insert Single ***
 coolDB.add({ item: { name: 'Mary' } })
     .then(function(result) {
@@ -30,6 +30,8 @@ coolDB.add({ item: [{ name: 'Blue' }, { name: 'Trunk' }, { name: 'Blue'}] })
     .catch(function(err) {
         console.log(err);
     });
+*/
+
 /*
 // *** get ***
 coolDB.get({ key:'name', value: 'Blue'})
@@ -103,10 +105,13 @@ app.engine('html', require('ejs').renderFile);
 app.use(express.static(__dirname + '/public'));
 
 // Body
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
-app.get('/', function (req, res) {
+var Routes = express.Router();
+
+Routes.get('/', function (req, res) {
   res.render('index.html');
 });
 
@@ -119,16 +124,16 @@ var people = [
 
 			 ];
 
-app.get('/read', function (req, res) {
+Routes.get('/read', function (req, res) {
   res.send(people);
 });
 
-app.post('/read2', function (req, res) {
+Routes.post('/read2', function (req, res) {
 	console.log(req.body.name);
   res.send(people);
 });
 
-app.post('/create', function (req, res) {
+Routes.post('/create', function (req, res) {
 	console.log(req.body);
 	var item = {
 		Name: req.body.Name,
@@ -140,7 +145,7 @@ app.post('/create', function (req, res) {
   	res.send(item);
 });
 
-app.get('/create2', function (req, res) {
+Routes.get('/create2', function (req, res) {
 	console.log(req.query);
 	var item = {
 		Name: req.query.Name,
@@ -162,13 +167,13 @@ function deleteItem(id) {
 		throw 'Item was not found through cuid';
 }
 
-app.post('/delete', function (req, res) {
+Routes.post('/delete', function (req, res) {
 	console.log(req.body);
 	deleteItem(req.body.ID);
   	res.send(people);
 });
 
-app.get('/delete2', function (req, res) {
+Routes.get('/delete2', function (req, res) {
 	console.log(req.query);
 	deleteItem(req.query.ID);
   	res.send(people);
@@ -179,7 +184,7 @@ function select(params) {
 	return item;
 }
 
-app.post('/update', function (req, res) {
+Routes.post('/update', function (req, res) {
 	console.log(req.body);
 	var item = select({ ID: req.body.ID });
 	
@@ -189,7 +194,7 @@ app.post('/update', function (req, res) {
   	res.send(people);
 });
 
-app.get('/update2', function (req, res) {
+Routes.get('/update2', function (req, res) {
 	console.log(req.query);
 	var item = select({ ID: req.query.ID });
 	
@@ -198,6 +203,19 @@ app.get('/update2', function (req, res) {
 	
   	res.send(people);
 });
+
+
+Routes.post('/postUrl', function (req, res) {
+    console.log(req.body);
+    res.send('Item received -> ' + JSON.stringify(req.body));
+});
+
+Routes.get('/getUrl', function (req, res) {
+    console.log(req.query);
+    res.send('Item received -> ' + JSON.stringify(req.query));
+});
+
+app.use('/', Routes);
 
 var server = app.listen(3000, function () {
 

@@ -4,12 +4,14 @@
   "main": "index.js",
   "description": "CoolDB allows easy CRUD Array events using Promise.",
   "dependencies": {
+    "axios": "^0.5.4",
     "clone": "^1.0.2",
     "cuid": "^1.2.4",
     "es6-promise": "^2.1.1",
     "lazy.js": "^0.4.0"
   },
   "devDependencies": {
+    "axios": "^0.5.4",
     "body-parser": "^1.10.1",
     "browserify": "^9.0.3",
     "clone": "^1.0.2",
