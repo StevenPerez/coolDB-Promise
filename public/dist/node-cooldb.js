@@ -388,8 +388,6 @@ cooldb = function cooldb() {
                     // History
                     if (bufferHistory > 0 && params.isHistoryNeeded) { 
                         if (delItems.length > 1) {
-                            console.log('ARRAY');
-                            console.log(delItems);
                             addHistory({ item: clone(delItems), old: clone(delItems), action: 'Deleted', isArray: true });
                             
                         } else {
@@ -536,7 +534,7 @@ cooldb = function cooldb() {
             return new Promise(function(resolve, reject) {
                 try {
                     
-                    params                  = params || {};
+                    params = params || {};
                     
                     if (!params.hasOwnProperty('isHistoryNeeded'))
                         params.isHistoryNeeded = true;
@@ -592,6 +590,35 @@ cooldb = function cooldb() {
                 bufferHistory = buffer;
             else
                 throw 'buffer should be numeric.';
+        },
+        
+        cleanHistory: function cleanHistory() {
+            
+            return new Promise(function(resolve, reject) {
+                try {
+                    
+                    cdbHistory = [];
+                    
+                    var singleItem = { item: [{ old: null, new: null, action: 'Cleaned', hcuid: cuid() }],
+                                   action: 'Cleaned',  hcuid: cuid() };
+                    
+                    cdbHistory.push(singleItem);
+
+                    // Change Feed
+                    if (changeFeedHCB != undefined) { 
+                        setTimeout(function() {
+                            changeFeedHCB(singleItem);
+                        }, callbackTimer);
+                    }
+                    
+                    // Resolve
+                    resolve([{ old: null, new: null, action: 'Cleaned' }]);
+                } catch (err) {
+                    var msg = (err.hasOwnProperty('message')) ? err.message : err;
+                    reject(new Error( msg ));
+                }
+            });
+        
         },
         
         history: function history() {
@@ -656,6 +683,11 @@ cooldb = function cooldb() {
                         // UNDO DELETE
                         else if (item.action === 'Deleted') {
                             resolve(coolDB.add({ item : item.old, isHistoryNeeded: false })._result);
+                        }
+                        // UNDO CLEANED
+                        else if (item.action === 'Cleaned') {
+                            resolve(coolDB.add({ item : item.old, isHistoryNeeded: false })._result);
+                            return;
                         }
                     });
                     
