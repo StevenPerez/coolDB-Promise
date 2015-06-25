@@ -9582,8 +9582,6 @@ cooldb = function cooldb() {
                     var singleItem = { item: [{ old: null, new: null, action: 'Cleaned', hcuid: cuid() }],
                                    action: 'Cleaned',  hcuid: cuid() };
                     
-                    cdbHistory.push(singleItem);
-
                     // Change Feed
                     if (changeFeedHCB != undefined) { 
                         setTimeout(function() {
@@ -9683,5 +9681,5 @@ cooldb = function cooldb() {
 };
 
 module.exports = cooldb;
-}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_4bb0cecb.js","/")
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_49b2ab5b.js","/")
 },{"buffer":4,"clone":1,"cuid":2,"es6-promise":3,"lazy.js":8,"oMfpAn":7}]},{},[9])

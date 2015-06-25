@@ -579,3 +579,22 @@ coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
             console.log(err);
         });
 */
+
+/* CLEAN HISTORY */
+/*
+function cleanHistory() {
+    console.log('HISTORY ITEMS');
+    console.log( clone(coolDB.history()._result) );
+    
+    coolDB.cleanHistory();
+    
+    console.log('AFTER HISTORY CLEAN');
+    console.log( coolDB.history()._result );
+}
+
+coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
+        .then(cleanHistory)
+        .catch(function(err){
+            console.log(err);
+        });
+*/

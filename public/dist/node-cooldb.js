@@ -602,8 +602,6 @@ cooldb = function cooldb() {
                     var singleItem = { item: [{ old: null, new: null, action: 'Cleaned', hcuid: cuid() }],
                                    action: 'Cleaned',  hcuid: cuid() };
                     
-                    cdbHistory.push(singleItem);
-
                     // Change Feed
                     if (changeFeedHCB != undefined) { 
                         setTimeout(function() {
