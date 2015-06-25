@@ -648,7 +648,7 @@ returns: Object
 coolDB.changeFeedHistory(function(change){
     console.log(change);
     // { item: [{ old: ?, new: ?, action: ?, hcuid: CUID }], action: X,  hcuid: CUID }
-    // action => "Inserted" | "Deleted" | "Updated" | "Cleaned"
+    // action => "Inserted" | "Deleted" | "Updated" | "Cleaned".
     // ?      => Object / Array
 });
 

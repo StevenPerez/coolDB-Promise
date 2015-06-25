@@ -89,7 +89,7 @@ console.log( coolDB.clone()._result );
 
 // HISTORY
 
-coolDB.setBufferHistory(3);
+coolDB.setBufferHistory(5);
 
 coolDB.changeFeedHistory(function(result){
     console.log('HISTORY CHANGE FEED');
