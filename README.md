@@ -71,7 +71,7 @@ coolDB.del({ key: 'name', value: 'Pacman' })
 ### update
 Update the items where a key + value match with the items stored inside the cooldb Array
 ```
-function update(params, cb)
+function update(params)
 params: { key (Property name) | value (Property value) | item (New Property values) }
 returns: Array => [ Object {old: Object, new: Object, action: "Updated"}, ... ]
 ```
@@ -98,7 +98,7 @@ coolDB.update({ key: 'name', value: 'Blue', item: { name: 'Pacman' } })
 ### first
 Return the first item where a key + value match with the items stored inside the cooldb Array
 ```
-function first(params, cb)
+function first(params)
 params: { key (Property name) | value (Property value) }
 returns: Object { item (First object found) | count (Number of objects found) }
 ```
@@ -115,7 +115,7 @@ coolDB.first({ key:'name', value: 'Blue'})
 ### get
 Get the items where a key + value match with the items stored inside the cooldb Array
 ```
-function get(params, cb)
+function get(params)
 params: { key (Property name) | value (Property value) }
 returns: Object { items (Array of objects found) | count (Number of objects found) }
 ```
@@ -153,7 +153,7 @@ coolDB.clone()._result; // [Object, Object, Object, Object]
 ### clean
 Reset to empty Array the internal cooldb Array.
 ```
-function clean(cb)
+function clean()
 returns: Array => [ Object {old: null, new: null, action: "Cleaned"} ]
 ```
 ``` javascript
