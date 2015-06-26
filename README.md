@@ -653,3 +653,65 @@ coolDB.changeFeedHistory(function(change){
 });
 
 ```
+<br />
+## Ajax
+### Introduction
+CoolDB-Promise provides an easy way to send items via post / get requests to the server using the axios module, in this way, just specify the url, cuid and json (defaul false) to send a non history plain object by cuid.
+<br />
+### postCuid
+Ajax post request, send an internal non history item to the server by cuid.
+```
+function postCuid({ url | cuid | json (default false) })
+returns: Ajax server response
+```
+``` javascript
+// Example:
+function postCuidDemo() {
+    
+    var itemCuid = coolDB.db()._result[0].cuid;
+    
+    coolDB.postCuid({ url: '/postUrl', cuid: itemCuid, json: false }) 
+          .then(function(success){
+            console.log( success );
+          })
+          .catch(function(err){
+            console.log( err );
+          });
+}
+
+coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
+        .then(postCuidDemo)
+        .catch(function(err){
+            console.log(err);
+        });
+
+```
+<br />
+### getCuid
+Ajax get request, send an internal non history item to the server by cuid.
+```
+function getCuid({ url | cuid | json (default false) })
+returns: Ajax server response
+```
+``` javascript
+// Example:
+function getCuidDemo() {
+    
+    var itemCuid = coolDB.db()._result[0].cuid;
+
+    coolDB.getCuid({ url: '/getUrl', cuid: itemCuid, json: false }) 
+          .then(function(success){
+            console.log( success );
+          })
+          .catch(function(err){
+            console.log( err );
+          });
+}
+
+coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
+        .then(getCuidDemo)
+        .catch(function(err){
+            console.log(err);
+        });
+
+```
