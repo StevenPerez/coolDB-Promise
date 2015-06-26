@@ -607,7 +607,7 @@ function postCuidDemo() {
     
     var itemCuid = coolDB.db()._result[0].cuid;
     
-    coolDB.postCuid({ url: '/postUrl', cuid: itemCuid, json: true }) 
+    coolDB.postCuid({ url: '/postUrl', cuid: itemCuid, json: false }) 
           .then(function(success){
             console.log( success );
           })
@@ -621,12 +621,10 @@ coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
         .catch(function(err){
             console.log(err);
         });
-        
 */
 
 /* GET CUID */
 /*
-
 function getCuidDemo() {
     
     var itemCuid = coolDB.db()._result[0].cuid;
