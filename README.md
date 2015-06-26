@@ -186,6 +186,7 @@ CoolDB-Promise performs CRUD actions over an internal array, however it contains
 <br />
 <strong>Note:</strong>History is activated once you set the History Buffer through setBufferHistory(X) method where X is the number of history records that will be able to <strong>Undo.</strong>. This option is just available for <i>plain objects</i>, it uses the clone module available in npm.
 <br />
+
 ### history
 Get the cooldb History Array Mirror.
 ```
