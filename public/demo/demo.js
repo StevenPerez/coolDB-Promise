@@ -74,7 +74,7 @@ coolDB.del({ key: 'name', value: 'Pacman' })
     .catch(function(err) {
         console.log(err);
     });
-    
+
 }, 500);
 
 // Clone
@@ -120,7 +120,7 @@ coolDB.add({ item: [{ name: 'Mary' }, { name: 'Yorle' }, { name: 'Samantha' } ] 
     .catch(function(err) {
         console.log(err);
     });
-    
+
 coolDB.add({ item: { name: 'Jane' } })
     .then(function(result) {
 
@@ -208,13 +208,13 @@ coolDB.add({ item: { name: 'Jhon' } })
 function displayDbItems(){
     console.log('DB ITEMS');
     console.log( clone(coolDB.db()._result) );
-    return coolDB.history()._result[0];  
+    return coolDB.history()._result[0];
 }
 
 function UndoSpecific(item){
     // Undo Specific Item from a bunch of Inserts
     coolDB.undo({ hcuid: item.hcuid })
-            .then(function(hItem){ 
+            .then(function(hItem){
                 console.log('RESULT -> DB UNDO INSERT');
                 console.log( coolDB.db()._result );
             })
@@ -237,13 +237,13 @@ coolDB.add({ item: { name: 'Jhon' } })
 function displayDbItems(){
     console.log('DB ITEMS');
     console.log( clone(coolDB.db()._result) );
-    return coolDB.history()._result[0];  
+    return coolDB.history()._result[0];
 }
 
 function UndoSpecific(item){
     // Undo Specific Item from a bunch of Inserts
     coolDB.undo({ hcuid: item.hcuid })
-            .then(function(hItem){ 
+            .then(function(hItem){
                 console.log('RESULT -> DB UNDO BUNCH OF INSERTS ');
                 console.log( coolDB.db()._result );
             })
@@ -265,13 +265,13 @@ coolDB.add({ item: [{ name: 'Jhon' }, { name: 'Jane' }] })
 function displayDbItems(){
     console.log('DB ITEMS');
     console.log( clone(coolDB.db()._result) );
-    return coolDB.history()._result[0];  
+    return coolDB.history()._result[0];
 }
 
 function UndoSpecificFromBunch(item){
     // Undo Specific Item from a bunch of Inserts
     coolDB.undo({ hcuid: item.hcuid, hicuid: item.item[0].hcuid })
-            .then(function(hItem){ 
+            .then(function(hItem){
                 console.log('RESULT -> DB WITHOUT SPECIFIC ITEM DELETED BY UNDO');
                 console.log( coolDB.db()._result );
             })
@@ -293,7 +293,7 @@ coolDB.add({ item: [{ name: 'Jhon' }, { name: 'Jane' }] })
 function displayDbItems(){
     console.log('DB ITEMS');
     console.log( clone(coolDB.db()._result) );
-    
+
     return clone(coolDB.db()._result[0]);
 }
 
@@ -301,16 +301,16 @@ function changeJhon(item) {
     coolDB.update({ key: 'cuid', value: item.cuid, item: { name: 'Yolo'} })
           .then(function(item){
             console.log('RESULT -> DB ITEM UPDATE');
-            console.log( clone(item[0].new ) );                
+            console.log( clone(item[0].new ) );
           });
 }
 
 function UndoSpecific(){
-    
+
     coolDB.history().then(function(item){
-    
+
         coolDB.undo({ hcuid: item[1].hcuid })
-                .then(function(hItem){ 
+                .then(function(hItem){
                     console.log('RESULT -> DB UNDO UPDATE');
                     console.log( coolDB.db()._result );
                 })
@@ -334,7 +334,7 @@ coolDB.add({ item: { name: 'Jhon' } })
 function displayDbItems(){
     console.log('DB ITEMS');
     console.log( clone(coolDB.db()._result) );
-    
+
     return clone(coolDB.db()._result[0]);
 }
 
@@ -342,16 +342,16 @@ function changeByAge(item) {
     coolDB.update({ key: 'age', value: 20, item: { name: 'Yolo'} })
           .then(function(item){
             console.log('RESULT -> DB ITEM UPDATE');
-            console.log( clone(item ) );                
+            console.log( clone(item ) );
           });
 }
 
 function UndoSpecific(){
-    
+
     coolDB.history().then(function(item){
-        
+
         coolDB.undo({ hcuid: item[1].hcuid })
-                .then(function(hItem){ 
+                .then(function(hItem){
                     console.log('RESULT -> DB UNDO UPDATE');
                     console.log( coolDB.db()._result );
                 })
@@ -376,7 +376,7 @@ coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
 function displayDbItems(){
     console.log('DB ITEMS');
     console.log( clone(coolDB.db()._result) );
-    
+
     return clone(coolDB.db()._result[0]);
 }
 
@@ -384,17 +384,17 @@ function changeByAge(item) {
     coolDB.update({ key: 'age', value: 20, item: { name: 'Yolo'} })
           .then(function(item){
             console.log('RESULT -> DB ITEM UPDATE');
-            console.log( clone(item ) );                
+            console.log( clone(item ) );
           });
 }
 
 function UndoSpecificFromBunch(){
-    
+
     coolDB.history()
           .then(function(item){
-        
+
             coolDB.undo({ hcuid: item[1].hcuid, hicuid: item[1].item[1].hcuid })
-                    .then(function(hItem){ 
+                    .then(function(hItem){
                         console.log('RESULT -> DB WITHOUT SPECIFIC ITEM DELETED BY UNDO');
                         console.log( coolDB.db()._result );
                     })
@@ -421,21 +421,21 @@ function deleteItem() {
           .catch(function(err){
             console.log(err);
           });
-    
+
     return clone(item);
 }
 
 function displayDbItems(){
     console.log('DB ITEMS');
     console.log( clone(coolDB.db()._result) );
-    return coolDB.history()._result[1];  
+    return coolDB.history()._result[1];
 }
 
 function UndoSpecific(item){
 
     // Undo Specific Item from a bunch of Inserts
     coolDB.undo({ hcuid: item.hcuid })
-            .then(function(hItem){ 
+            .then(function(hItem){
                 console.log('RESULT -> DB UNDO DELETE');
                 console.log( coolDB.db()._result );
             })
@@ -461,21 +461,21 @@ function deleteItem() {
           .catch(function(err){
             console.log(err);
           });
-    
+
     return clone(item);
 }
 
 function displayDbItems(){
     console.log('DB ITEMS');
     console.log( clone(coolDB.db()._result) );
-    return coolDB.history()._result[1];  
+    return coolDB.history()._result[1];
 }
 
 function UndoSpecific(item){
 
     // Undo Specific Item from a bunch of Inserts
     coolDB.undo({ hcuid: item.hcuid })
-            .then(function(hItem){ 
+            .then(function(hItem){
                 console.log('RESULT -> DB UNDO DELETES');
                 console.log( coolDB.db()._result );
             })
@@ -501,21 +501,21 @@ function deleteItem() {
           .catch(function(err){
             console.log(err);
           });
-    
+
     return clone(item);
 }
 
 function displayDbItems(){
     console.log('DB ITEMS');
     console.log( clone(coolDB.db()._result) );
-    return coolDB.history()._result[1];  
+    return coolDB.history()._result[1];
 }
 
 function UndoSpecific(item){
 
     // Undo Specific Item from a bunch of Inserts
     coolDB.undo({ hcuid: item.hcuid, hicuid: item.item[1].hcuid })
-            .then(function(hItem){ 
+            .then(function(hItem){
                 console.log('RESULT -> DB UNDO SPECIFIC DELETE');
                 console.log( coolDB.db()._result );
             })
@@ -536,10 +536,10 @@ coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
 /* UNDO CLEAN */
 /*
 function UndoSpecific(){
-    
+
     // Undo Specific Item from a bunch of Inserts
     coolDB.undo({ hcuid: coolDB.history()._result[1].hcuid })
-            .then(function(hItem){ 
+            .then(function(hItem){
                 console.log('RESULT -> DB UNDO SPECIFIC DELETE');
                 console.log( coolDB.db()._result );
             })
@@ -560,10 +560,10 @@ coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
 /*
 function UndoSpecific(){
     var item = coolDB.history()._result[1];
-    
+
     // Undo Specific Item from a bunch of Inserts
     coolDB.undo({ hcuid: item.hcuid, hicuid: item.item[1].hcuid })
-            .then(function(hItem){ 
+            .then(function(hItem){
                 console.log('RESULT -> DB UNDO SPECIFIC DELETE');
                 console.log( coolDB.db()._result );
             })
@@ -585,9 +585,9 @@ coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
 function cleanHistory() {
     console.log('HISTORY ITEMS');
     console.log( clone(coolDB.history()._result) );
-    
+
     coolDB.cleanHistory();
-    
+
     console.log('AFTER HISTORY CLEAN');
     console.log( coolDB.history()._result );
 }
@@ -604,10 +604,10 @@ coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
 /* POST CUID */
 /*
 function postCuidDemo() {
-    
+
     var itemCuid = coolDB.db()._result[0].cuid;
-    
-    coolDB.postCuid({ url: '/postUrl', cuid: itemCuid, json: false }) 
+
+    coolDB.postCuid({ url: '/postUrl', cuid: itemCuid, json: false })
           .then(function(success){
             console.log( success );
           })
@@ -626,10 +626,10 @@ coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
 /* GET CUID */
 /*
 function getCuidDemo() {
-    
+
     var itemCuid = coolDB.db()._result[0].cuid;
 
-    coolDB.getCuid({ url: '/getUrl', cuid: itemCuid, json: false }) 
+    coolDB.getCuid({ url: '/getUrl', cuid: itemCuid, json: false })
           .then(function(success){
             console.log( success );
           })
@@ -643,5 +643,5 @@ coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
         .catch(function(err){
             console.log(err);
         });
-        
+
 */

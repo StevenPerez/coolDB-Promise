@@ -1,8 +1,8 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 module.exports = require('./lib/axios');
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\axios\\index.js","/..\\..\\node_modules\\axios")
-},{"./lib/axios":3,"buffer":18,"ngpmcQ":21}],2:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/axios/index.js","/../../node_modules/axios")
+},{"./lib/axios":3,"buffer":18,"oMfpAn":21}],2:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -111,8 +111,8 @@ module.exports = function xhrAdapter(resolve, reject, config) {
   request.send(data);
 };
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\axios\\lib\\adapters\\xhr.js","/..\\..\\node_modules\\axios\\lib\\adapters")
-},{"./../defaults":6,"./../helpers/buildUrl":7,"./../helpers/cookies":8,"./../helpers/parseHeaders":10,"./../helpers/transformData":12,"./../helpers/urlIsSameOrigin":13,"./../utils":14,"buffer":18,"ngpmcQ":21}],3:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/axios/lib/adapters/xhr.js","/../../node_modules/axios/lib/adapters")
+},{"./../defaults":6,"./../helpers/buildUrl":7,"./../helpers/cookies":8,"./../helpers/parseHeaders":10,"./../helpers/transformData":12,"./../helpers/urlIsSameOrigin":13,"./../utils":14,"buffer":18,"oMfpAn":21}],3:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -226,8 +226,8 @@ axios.interceptors = {
   createShortMethodsWithData('post', 'put', 'patch');
 })();
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\axios\\lib\\axios.js","/..\\..\\node_modules\\axios\\lib")
-},{"./core/InterceptorManager":4,"./core/dispatchRequest":5,"./defaults":6,"./helpers/deprecatedMethod":9,"./helpers/spread":11,"./utils":14,"buffer":18,"es6-promise":17,"ngpmcQ":21}],4:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/axios/lib/axios.js","/../../node_modules/axios/lib")
+},{"./core/InterceptorManager":4,"./core/dispatchRequest":5,"./defaults":6,"./helpers/deprecatedMethod":9,"./helpers/spread":11,"./utils":14,"buffer":18,"es6-promise":17,"oMfpAn":21}],4:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -282,8 +282,8 @@ InterceptorManager.prototype.forEach = function (fn) {
 
 module.exports = InterceptorManager;
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\axios\\lib\\core\\InterceptorManager.js","/..\\..\\node_modules\\axios\\lib\\core")
-},{"./../utils":14,"buffer":18,"ngpmcQ":21}],5:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/axios/lib/core/InterceptorManager.js","/../../node_modules/axios/lib/core")
+},{"./../utils":14,"buffer":18,"oMfpAn":21}],5:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -312,8 +312,8 @@ module.exports = function dispatchRequest(config) {
 };
 
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\axios\\lib\\core\\dispatchRequest.js","/..\\..\\node_modules\\axios\\lib\\core")
-},{"../adapters/http":2,"../adapters/xhr":2,"buffer":18,"ngpmcQ":21}],6:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/axios/lib/core/dispatchRequest.js","/../../node_modules/axios/lib/core")
+},{"../adapters/http":2,"../adapters/xhr":2,"buffer":18,"oMfpAn":21}],6:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -368,8 +368,8 @@ module.exports = {
   xsrfHeaderName: 'X-XSRF-TOKEN'
 };
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\axios\\lib\\defaults.js","/..\\..\\node_modules\\axios\\lib")
-},{"./utils":14,"buffer":18,"ngpmcQ":21}],7:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/axios/lib/defaults.js","/../../node_modules/axios/lib")
+},{"./utils":14,"buffer":18,"oMfpAn":21}],7:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -424,8 +424,8 @@ module.exports = function buildUrl(url, params) {
   return url;
 };
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\axios\\lib\\helpers\\buildUrl.js","/..\\..\\node_modules\\axios\\lib\\helpers")
-},{"./../utils":14,"buffer":18,"ngpmcQ":21}],8:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/axios/lib/helpers/buildUrl.js","/../../node_modules/axios/lib/helpers")
+},{"./../utils":14,"buffer":18,"oMfpAn":21}],8:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -465,8 +465,8 @@ module.exports = {
   }
 };
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\axios\\lib\\helpers\\cookies.js","/..\\..\\node_modules\\axios\\lib\\helpers")
-},{"./../utils":14,"buffer":18,"ngpmcQ":21}],9:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/axios/lib/helpers/cookies.js","/../../node_modules/axios/lib/helpers")
+},{"./../utils":14,"buffer":18,"oMfpAn":21}],9:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -491,8 +491,8 @@ module.exports = function deprecatedMethod(method, instead, docs) {
   } catch (e) {}
 };
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\axios\\lib\\helpers\\deprecatedMethod.js","/..\\..\\node_modules\\axios\\lib\\helpers")
-},{"buffer":18,"ngpmcQ":21}],10:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/axios/lib/helpers/deprecatedMethod.js","/../../node_modules/axios/lib/helpers")
+},{"buffer":18,"oMfpAn":21}],10:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -529,8 +529,8 @@ module.exports = function parseHeaders(headers) {
   return parsed;
 };
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\axios\\lib\\helpers\\parseHeaders.js","/..\\..\\node_modules\\axios\\lib\\helpers")
-},{"./../utils":14,"buffer":18,"ngpmcQ":21}],11:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/axios/lib/helpers/parseHeaders.js","/../../node_modules/axios/lib/helpers")
+},{"./../utils":14,"buffer":18,"oMfpAn":21}],11:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -560,8 +560,8 @@ module.exports = function spread(callback) {
   };
 };
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\axios\\lib\\helpers\\spread.js","/..\\..\\node_modules\\axios\\lib\\helpers")
-},{"buffer":18,"ngpmcQ":21}],12:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/axios/lib/helpers/spread.js","/../../node_modules/axios/lib/helpers")
+},{"buffer":18,"oMfpAn":21}],12:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -583,8 +583,8 @@ module.exports = function transformData(data, headers, fns) {
   return data;
 };
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\axios\\lib\\helpers\\transformData.js","/..\\..\\node_modules\\axios\\lib\\helpers")
-},{"./../utils":14,"buffer":18,"ngpmcQ":21}],13:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/axios/lib/helpers/transformData.js","/../../node_modules/axios/lib/helpers")
+},{"./../utils":14,"buffer":18,"oMfpAn":21}],13:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -639,8 +639,8 @@ module.exports = function urlIsSameOrigin(requestUrl) {
         parsed.host === originUrl.host);
 };
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\axios\\lib\\helpers\\urlIsSameOrigin.js","/..\\..\\node_modules\\axios\\lib\\helpers")
-},{"./../utils":14,"buffer":18,"ngpmcQ":21}],14:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/axios/lib/helpers/urlIsSameOrigin.js","/../../node_modules/axios/lib/helpers")
+},{"./../utils":14,"buffer":18,"oMfpAn":21}],14:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 'use strict';
 
@@ -860,8 +860,8 @@ module.exports = {
   trim: trim
 };
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\axios\\lib\\utils.js","/..\\..\\node_modules\\axios\\lib")
-},{"buffer":18,"ngpmcQ":21}],15:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/axios/lib/utils.js","/../../node_modules/axios/lib")
+},{"buffer":18,"oMfpAn":21}],15:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var clone = (function() {
 'use strict';
@@ -1024,8 +1024,8 @@ if (typeof module === 'object' && module.exports) {
   module.exports = clone;
 }
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\clone\\clone.js","/..\\..\\node_modules\\clone")
-},{"buffer":18,"ngpmcQ":21}],16:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/clone/clone.js","/../../node_modules/clone")
+},{"buffer":18,"oMfpAn":21}],16:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /**
  * cuid.js
@@ -1138,15 +1138,15 @@ if (typeof module === 'object' && module.exports) {
 
 }(this.applitude || this));
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\cuid\\dist\\browser-cuid.js","/..\\..\\node_modules\\cuid\\dist")
-},{"buffer":18,"ngpmcQ":21}],17:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/cuid/dist/browser-cuid.js","/../../node_modules/cuid/dist")
+},{"buffer":18,"oMfpAn":21}],17:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*!
  * @overview es6-promise - a tiny implementation of Promises/A+.
  * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
  * @license   Licensed under MIT license
  *            See https://raw.githubusercontent.com/jakearchibald/es6-promise/master/LICENSE
- * @version   2.3.0
+ * @version   2.1.1
  */
 
 (function() {
@@ -1176,9 +1176,7 @@ if (typeof module === 'object' && module.exports) {
     var lib$es6$promise$asap$$len = 0;
     var lib$es6$promise$asap$$toString = {}.toString;
     var lib$es6$promise$asap$$vertxNext;
-    var lib$es6$promise$asap$$customSchedulerFn;
-
-    var lib$es6$promise$asap$$asap = function asap(callback, arg) {
+    function lib$es6$promise$asap$$asap(callback, arg) {
       lib$es6$promise$asap$$queue[lib$es6$promise$asap$$len] = callback;
       lib$es6$promise$asap$$queue[lib$es6$promise$asap$$len + 1] = arg;
       lib$es6$promise$asap$$len += 2;
@@ -1186,21 +1184,11 @@ if (typeof module === 'object' && module.exports) {
         // If len is 2, that means that we need to schedule an async flush.
         // If additional callbacks are queued before the queue is flushed, they
         // will be processed by this flush that we are scheduling.
-        if (lib$es6$promise$asap$$customSchedulerFn) {
-          lib$es6$promise$asap$$customSchedulerFn(lib$es6$promise$asap$$flush);
-        } else {
-          lib$es6$promise$asap$$scheduleFlush();
-        }
+        lib$es6$promise$asap$$scheduleFlush();
       }
     }
 
-    function lib$es6$promise$asap$$setScheduler(scheduleFn) {
-      lib$es6$promise$asap$$customSchedulerFn = scheduleFn;
-    }
-
-    function lib$es6$promise$asap$$setAsap(asapFn) {
-      lib$es6$promise$asap$$asap = asapFn;
-    }
+    var lib$es6$promise$asap$$default = lib$es6$promise$asap$$asap;
 
     var lib$es6$promise$asap$$browserWindow = (typeof window !== 'undefined') ? window : undefined;
     var lib$es6$promise$asap$$browserGlobal = lib$es6$promise$asap$$browserWindow || {};
@@ -1333,7 +1321,7 @@ if (typeof module === 'object' && module.exports) {
     }
 
     function lib$es6$promise$$internal$$handleForeignThenable(promise, thenable, then) {
-       lib$es6$promise$asap$$asap(function(promise) {
+       lib$es6$promise$asap$$default(function(promise) {
         var sealed = false;
         var error = lib$es6$promise$$internal$$tryThen(then, thenable, function(value) {
           if (sealed) { return; }
@@ -1414,7 +1402,7 @@ if (typeof module === 'object' && module.exports) {
       promise._state = lib$es6$promise$$internal$$FULFILLED;
 
       if (promise._subscribers.length !== 0) {
-        lib$es6$promise$asap$$asap(lib$es6$promise$$internal$$publish, promise);
+        lib$es6$promise$asap$$default(lib$es6$promise$$internal$$publish, promise);
       }
     }
 
@@ -1423,7 +1411,7 @@ if (typeof module === 'object' && module.exports) {
       promise._state = lib$es6$promise$$internal$$REJECTED;
       promise._result = reason;
 
-      lib$es6$promise$asap$$asap(lib$es6$promise$$internal$$publishRejection, promise);
+      lib$es6$promise$asap$$default(lib$es6$promise$$internal$$publishRejection, promise);
     }
 
     function lib$es6$promise$$internal$$subscribe(parent, child, onFulfillment, onRejection) {
@@ -1437,7 +1425,7 @@ if (typeof module === 'object' && module.exports) {
       subscribers[length + lib$es6$promise$$internal$$REJECTED]  = onRejection;
 
       if (length === 0 && parent._state) {
-        lib$es6$promise$asap$$asap(lib$es6$promise$$internal$$publish, parent);
+        lib$es6$promise$asap$$default(lib$es6$promise$$internal$$publish, parent);
       }
     }
 
@@ -1694,7 +1682,7 @@ if (typeof module === 'object' && module.exports) {
     /**
       Promise objects represent the eventual result of an asynchronous operation. The
       primary way of interacting with a promise is through its `then` method, which
-      registers callbacks to receive either a promise's eventual value or the reason
+      registers callbacks to receive either a promise’s eventual value or the reason
       why the promise cannot be fulfilled.
 
       Terminology
@@ -1817,9 +1805,6 @@ if (typeof module === 'object' && module.exports) {
     lib$es6$promise$promise$$Promise.race = lib$es6$promise$promise$race$$default;
     lib$es6$promise$promise$$Promise.resolve = lib$es6$promise$promise$resolve$$default;
     lib$es6$promise$promise$$Promise.reject = lib$es6$promise$promise$reject$$default;
-    lib$es6$promise$promise$$Promise._setScheduler = lib$es6$promise$asap$$setScheduler;
-    lib$es6$promise$promise$$Promise._setAsap = lib$es6$promise$asap$$setAsap;
-    lib$es6$promise$promise$$Promise._asap = lib$es6$promise$asap$$asap;
 
     lib$es6$promise$promise$$Promise.prototype = {
       constructor: lib$es6$promise$promise$$Promise,
@@ -2030,7 +2015,7 @@ if (typeof module === 'object' && module.exports) {
 
         if (state) {
           var callback = arguments[state - 1];
-          lib$es6$promise$asap$$asap(function(){
+          lib$es6$promise$asap$$default(function(){
             lib$es6$promise$$internal$$invokeCallback(state, child, callback, result);
           });
         } else {
@@ -2114,8 +2099,8 @@ if (typeof module === 'object' && module.exports) {
 }).call(this);
 
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\es6-promise\\dist\\es6-promise.js","/..\\..\\node_modules\\es6-promise\\dist")
-},{"buffer":18,"ngpmcQ":21}],18:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/es6-promise/dist/es6-promise.js","/../../node_modules/es6-promise/dist")
+},{"buffer":18,"oMfpAn":21}],18:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*!
  * The buffer module from node.js, for the browser.
@@ -3227,8 +3212,8 @@ function assert (test, message) {
   if (!test) throw new Error(message || 'Failed assertion')
 }
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\buffer\\index.js","/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\buffer")
-},{"base64-js":19,"buffer":18,"ieee754":20,"ngpmcQ":21}],19:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/index.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer")
+},{"base64-js":19,"buffer":18,"ieee754":20,"oMfpAn":21}],19:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
@@ -3355,96 +3340,96 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\buffer\\node_modules\\base64-js\\lib\\b64.js","/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\buffer\\node_modules\\base64-js\\lib")
-},{"buffer":18,"ngpmcQ":21}],20:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib/b64.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/base64-js/lib")
+},{"buffer":18,"oMfpAn":21}],20:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-  var e, m
-  var eLen = nBytes * 8 - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var nBits = -7
-  var i = isLE ? (nBytes - 1) : 0
-  var d = isLE ? -1 : 1
-  var s = buffer[offset + i]
+exports.read = function(buffer, offset, isLE, mLen, nBytes) {
+  var e, m,
+      eLen = nBytes * 8 - mLen - 1,
+      eMax = (1 << eLen) - 1,
+      eBias = eMax >> 1,
+      nBits = -7,
+      i = isLE ? (nBytes - 1) : 0,
+      d = isLE ? -1 : 1,
+      s = buffer[offset + i];
 
-  i += d
+  i += d;
 
-  e = s & ((1 << (-nBits)) - 1)
-  s >>= (-nBits)
-  nBits += eLen
-  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+  e = s & ((1 << (-nBits)) - 1);
+  s >>= (-nBits);
+  nBits += eLen;
+  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8);
 
-  m = e & ((1 << (-nBits)) - 1)
-  e >>= (-nBits)
-  nBits += mLen
-  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+  m = e & ((1 << (-nBits)) - 1);
+  e >>= (-nBits);
+  nBits += mLen;
+  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8);
 
   if (e === 0) {
-    e = 1 - eBias
+    e = 1 - eBias;
   } else if (e === eMax) {
-    return m ? NaN : ((s ? -1 : 1) * Infinity)
+    return m ? NaN : ((s ? -1 : 1) * Infinity);
   } else {
-    m = m + Math.pow(2, mLen)
-    e = e - eBias
+    m = m + Math.pow(2, mLen);
+    e = e - eBias;
   }
-  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
-}
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen);
+};
 
-exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c
-  var eLen = nBytes * 8 - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
-  var i = isLE ? 0 : (nBytes - 1)
-  var d = isLE ? 1 : -1
-  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
+  var e, m, c,
+      eLen = nBytes * 8 - mLen - 1,
+      eMax = (1 << eLen) - 1,
+      eBias = eMax >> 1,
+      rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0),
+      i = isLE ? 0 : (nBytes - 1),
+      d = isLE ? 1 : -1,
+      s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0;
 
-  value = Math.abs(value)
+  value = Math.abs(value);
 
   if (isNaN(value) || value === Infinity) {
-    m = isNaN(value) ? 1 : 0
-    e = eMax
+    m = isNaN(value) ? 1 : 0;
+    e = eMax;
   } else {
-    e = Math.floor(Math.log(value) / Math.LN2)
+    e = Math.floor(Math.log(value) / Math.LN2);
     if (value * (c = Math.pow(2, -e)) < 1) {
-      e--
-      c *= 2
+      e--;
+      c *= 2;
     }
     if (e + eBias >= 1) {
-      value += rt / c
+      value += rt / c;
     } else {
-      value += rt * Math.pow(2, 1 - eBias)
+      value += rt * Math.pow(2, 1 - eBias);
     }
     if (value * c >= 2) {
-      e++
-      c /= 2
+      e++;
+      c /= 2;
     }
 
     if (e + eBias >= eMax) {
-      m = 0
-      e = eMax
+      m = 0;
+      e = eMax;
     } else if (e + eBias >= 1) {
-      m = (value * c - 1) * Math.pow(2, mLen)
-      e = e + eBias
+      m = (value * c - 1) * Math.pow(2, mLen);
+      e = e + eBias;
     } else {
-      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
-      e = 0
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen);
+      e = 0;
     }
   }
 
-  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8);
 
-  e = (e << mLen) | m
-  eLen += mLen
-  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+  e = (e << mLen) | m;
+  eLen += mLen;
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8);
 
-  buffer[offset + i - d] |= s * 128
-}
+  buffer[offset + i - d] |= s * 128;
+};
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\buffer\\node_modules\\ieee754\\index.js","/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\buffer\\node_modules\\ieee754")
-},{"buffer":18,"ngpmcQ":21}],21:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/ieee754/index.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/buffer/node_modules/ieee754")
+},{"buffer":18,"oMfpAn":21}],21:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 // shim for using process in browser
 
@@ -3510,8 +3495,8 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\process\\browser.js","/..\\..\\node_modules\\gulp-browserify\\node_modules\\browserify\\node_modules\\process")
-},{"buffer":18,"ngpmcQ":21}],22:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/process/browser.js","/../../node_modules/gulp-browserify/node_modules/browserify/node_modules/process")
+},{"buffer":18,"oMfpAn":21}],22:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 /*
  * @name Lazy.js
@@ -9853,26 +9838,27 @@ process.chdir = function (dir) {
 
 }(this));
 
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/..\\..\\node_modules\\lazy.js\\lazy.js","/..\\..\\node_modules\\lazy.js")
-},{"buffer":18,"ngpmcQ":21}],23:[function(require,module,exports){
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../../node_modules/lazy.js/lazy.js","/../../node_modules/lazy.js")
+},{"buffer":18,"oMfpAn":21}],23:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
+require('es6-promise').polyfill();
+
 var cuid        = require('cuid'),
-    pPolyfill   = require('es6-promise').polyfill(),
     Promise     = require('es6-promise').Promise,
     lazy        = require('lazy.js'),
     clone       = require('clone'),
     axios       = require('axios');
 
 cooldb = function cooldb() {
-    
+
     (this.hasOwnProperty('global')) ? global.Promise = Promise : window.Promise = Promise;
     (this.hasOwnProperty('global')) ? global.clone = clone : window.clone = clone;
     (this.hasOwnProperty('global')) ? global.lazy = lazy : window.lazy = lazy;
     (this.hasOwnProperty('global')) ? global.axios = axios : window.axios = axios;
-    
+
     // Production Array
     var cdb             = [];
-    // Production Change Feed 
+    // Production Change Feed
     var changeFeedCB    = undefined;
     // History Change Feed
     var changeFeedHCB   = undefined;
@@ -9881,11 +9867,11 @@ cooldb = function cooldb() {
     var bufferHistory   = 0;
     // Callback time
     var callbackTimer   = 0;
-    
+
     updateProps : function updateProps(source, dest) {
 
         return new Promise(function(resolve, reject){
-            
+
             try {
                 // Clone before changes
                 var currentDest = JSON.parse(JSON.stringify(dest));
@@ -9902,18 +9888,18 @@ cooldb = function cooldb() {
                 var updatedDest = JSON.parse(JSON.stringify(dest));
 
                 resolve({ before: currentDest, after: updatedDest });
-                
+
             } catch (err) {
                 var msg = (err.hasOwnProperty('message')) ? err.message : err;
                 reject(new Error( msg ));
             }
-            
+
         });
-        
+
 	}
-    
+
     addHistory: function addHistory(params) {
-            
+
         return new Promise(function(resolve, reject) {
 
             try {
@@ -9921,35 +9907,35 @@ cooldb = function cooldb() {
 
                 // default param array
                 params  = params || {};
-                
+
                 // item key prop
                 if (!params.hasOwnProperty('item'))
                     throw '[History] -> Key => [item] was not found';
 
                 if (!params.hasOwnProperty('action'))
                     throw '[History] -> Key => [action] was not found';
-                
+
                 if (!params.hasOwnProperty('isArray'))
                     throw '[History] -> Key => [isArray] was not found';
-                
+
                 var gblHistoryCuid  = cuid();
                 var singleItem      = null;
                 var interval        = null;
-                
+
                 // add
                 if (!params.isArray) {
-                    
+
                     params.new = (params.new === undefined || params.new === null) ? null : params.new;
                     params.old = (params.old === undefined || params.old === null) ? null : params.old;
-                    
+
                     // Added
                     singleItem = { item: [{ old: params.old, new: params.new, action: params.action, hcuid: cuid() }],
                                    action: params.action,  hcuid: gblHistoryCuid };
-                    
+
                     cdbHistory.push(singleItem);
 
                     // Change Feed
-                    if (changeFeedHCB != undefined) { 
+                    if (changeFeedHCB != undefined) {
                         setTimeout(function() {
                             changeFeedHCB(singleItem);
                         }, callbackTimer);
@@ -9964,26 +9950,26 @@ cooldb = function cooldb() {
                     var newItems = [];
                     //>> add Array
                     params.item.forEach(function(item) {
-                        
+
                         var tempNew = (item.hasOwnProperty('new')) ? item.new : null,
                             tempOld = (item.hasOwnProperty('old')) ? item.old : null;
                         tempOld = (params.action === 'Cleaned') ? item : tempOld;
-                        
+
                         singleItem = { old: tempOld, new: tempNew, action: params.action, hcuid: cuid() };
                         // Added
                         newItems.push(singleItem);
                     });
-                    
+
                     // Added
                     cdbHistory.push({ item: newItems, action: params.action, hcuid: gblHistoryCuid });
-                    
+
                     // Change Feed
-                    if (changeFeedHCB != undefined) { 
+                    if (changeFeedHCB != undefined) {
                         setTimeout(function() {
-                            changeFeedHCB({ item: newItems, action: params.action, hcuid: gblHistoryCuid }); 
+                            changeFeedHCB({ item: newItems, action: params.action, hcuid: gblHistoryCuid });
                         }, callbackTimer);
                     }
-                    
+
                     // Job Done !
                     resolve({ item: newItems, action: params.action, isArray: true, hcuid: gblHistoryCuid });
 
@@ -10005,26 +9991,26 @@ cooldb = function cooldb() {
 
         return this;
     }
-    
+
     return {
-        
+
         // >> Production <<
-        
+
         changeFeed: function changeFeed(fn) {
-            
+
             // Validate it is a function
-            if (typeof fn === 'function') { 
-                changeFeedCB = fn; 
+            if (typeof fn === 'function') {
+                changeFeedCB = fn;
             } else {
                 throw 'Invalid change Feed function.';
             }
-                
+
 		},
-        
+
         get: function get(params) {
-            
+
             return new Promise(function(resolve, reject) {
-                
+
                 try {
                     // >> Validations <<
 
@@ -10048,25 +10034,25 @@ cooldb = function cooldb() {
                     }
 
                     var itemFound = cdb.filter(function(item){ return item[key] == value; });
-                    
+
                     var result = {
                         items: itemFound,
                         count: itemFound.length
                     };
 
                     resolve(result);
-                    
+
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
                     reject(new Error( msg ));
                 }
-                
+
             });
-            
+
         },
-        
+
         first: function first(params) {
-            
+
             return new Promise(function(resolve, reject) {
                 try {
                     // >> Validations <<
@@ -10098,29 +10084,29 @@ cooldb = function cooldb() {
                     };
 
                     resolve(result);
-                    
+
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
                     reject(new Error( msg ));
                 }
-                
+
             });
-            
+
         },
-        
+
         add: function add(params) {
-            
+
             return new Promise(function(resolve, reject) {
-                
+
                 try {
                     // >> Validations <<
 
                     // default param array
                     params = params || {};
-                    
+
                     if (!params.hasOwnProperty('isHistoryNeeded'))
                         params.isHistoryNeeded = true;
-                    
+
                     // item key prop
                     if (!params.hasOwnProperty('item'))
                         throw 'Key => [item] was not found';
@@ -10132,16 +10118,16 @@ cooldb = function cooldb() {
                         // Added
                         cdb.push(params.item);
                         // Change Feed
-                        if (changeFeedCB != undefined) { 
+                        if (changeFeedCB != undefined) {
                             setTimeout(function() {
-                                changeFeedCB({ old: null, new: params.item, action: 'Inserted' }); 
+                                changeFeedCB({ old: null, new: params.item, action: 'Inserted' });
                             }, callbackTimer);
                         }
                         // History
-                        if (bufferHistory > 0 && params.isHistoryNeeded) { 
+                        if (bufferHistory > 0 && params.isHistoryNeeded) {
                             addHistory({ item: clone(params.item), new: clone(params.item), action: 'Inserted', isArray: false });
                         }
-                        
+
                         // Resolve
                         resolve([{ old: null, new: params.item, action: 'Inserted' }]);
 
@@ -10154,47 +10140,47 @@ cooldb = function cooldb() {
                             // Added
                             cdb.push(item);
                             newItems.push({ old: null, new: item, action: 'Inserted' });
-                            
+
                             // Change Feed
                             if (changeFeedCB != undefined) {
                                 setTimeout(function() {
-                                    changeFeedCB({ old: null, new: item, action: 'Inserted' }); 
+                                    changeFeedCB({ old: null, new: item, action: 'Inserted' });
                                 }, callbackTimer);
                             }
                         });
-                        
+
                         // History
-                        if (bufferHistory > 0 && params.isHistoryNeeded) { 
+                        if (bufferHistory > 0 && params.isHistoryNeeded) {
                             addHistory({ item: clone(newItems), action: 'Inserted', isArray: true });
                         }
-                        
+
                         // Resolve
                         resolve([{ old: null, new: newItems, action: 'Inserted' }]);
 
                     } else {
                         throw 'item parameter should correspond to an Object or Array.';
                     }
-                    
+
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
                     reject(new Error( msg ));
                 }
-                
+
             });
-            
+
             return this;
         },
-        
+
         del: function del(params) {
-            
+
             var $this = this;
-            
+
             return new Promise(function(resolve, reject) {
                 try {
                     // >> Validations <<
                     // default param array
                     params  = params || {};
-                    
+
                     if (!params.hasOwnProperty('isHistoryNeeded'))
                         params.isHistoryNeeded = true;
 
@@ -10216,60 +10202,60 @@ cooldb = function cooldb() {
                     }
 
                     var itemsFound = cdb.filter(function(item){ return item[key] == value; });
-                    
+
                     //>> Track Deletions
                     var delItems = [];
                     var delItem  = null;
-                    
+
                     for (var i = 0; i < itemsFound.length; i++) {
 
                         var item    = cdb.filter(function(item){ return item[key] == value; });
                         var index   = cdb.map(function(item){ return item[key]; }).indexOf(value);
 
                         if (index >= 0) {
-                            cdb.splice(index, 1); 
+                            cdb.splice(index, 1);
                         }
-                        
+
                         var itemDeleted = (Array.isArray(item)) ? item[0] : item;
-                        
+
                         // Change Feed
-                        if (changeFeedCB != undefined) { 
+                        if (changeFeedCB != undefined) {
                             setTimeout(function() {
-                                changeFeedCB({ old: itemDeleted, new: null, action: 'Deleted' }); 
+                                changeFeedCB({ old: itemDeleted, new: null, action: 'Deleted' });
                             }, callbackTimer);
                         }
 
                         if ( bufferHistory > 0 && itemsFound.length == 1 ) {
                             delItem = clone(itemDeleted);
                         }
-                        
+
                         delItems.push({ old: itemDeleted, new: null, action: 'Deleted' });
                     }
-                
+
                     // History
-                    if (bufferHistory > 0 && params.isHistoryNeeded) { 
+                    if (bufferHistory > 0 && params.isHistoryNeeded) {
                         if (delItems.length > 1) {
                             addHistory({ item: clone(delItems), old: clone(delItems), action: 'Deleted', isArray: true });
-                            
+
                         } else {
                             addHistory({ item: clone([delItem]), old: clone(delItem), action: 'Deleted', isArray: false });
                         }
                     }
-                    
+
                     resolve(delItems);
 
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
                     reject(new Error( msg ));
                 }
-                
+
             });
-            
+
             return this;
         },
-        
+
         db: function db() {
-            
+
             return new Promise(function(resolve, reject) {
                 try {
                     resolve(cdb);
@@ -10278,21 +10264,21 @@ cooldb = function cooldb() {
                     reject(new Error( msg ));
                 }
             });
-            
+
             return this;
         },
-        
+
         update: function update(params) {
-            
+
             var $this = this;
-            
+
             return new Promise(function(resolve, reject) {
                 try {
                     // >> Validations <<
-                    
+
                     // default param array
                     params                  = params || {};
-                    
+
                     if (!params.hasOwnProperty('isHistoryNeeded'))
                         params.isHistoryNeeded = true;
 
@@ -10316,67 +10302,67 @@ cooldb = function cooldb() {
                     // item key prop
                     if (!params.hasOwnProperty('item'))
                         throw 'Key => [item] was not found';
-                    
+
                     var itemsUpdated        = [];
                     var itemFound           = [];
                     var isArray             = false;
-                    
+
                     $this.get({ key: key, value: value})
                         .then(function(itemsFound) {
-                            
+
                             // Check if items found is an array or not
                             isArray = (itemsFound.count > 1) ? true : false;
-                        
+
                             itemsFound.items.forEach(function(dbItem){
-                                
+
                                 updateProps(params.item, dbItem)
                                     .then(function(result){
-                                                
+
                                         // Change Feed
-                                        if (changeFeedCB != undefined) { 
+                                        if (changeFeedCB != undefined) {
                                             setTimeout(function() {
-                                                changeFeedCB({ old: result.before, new: result.after, action: 'Updated' }); 
+                                                changeFeedCB({ old: result.before, new: result.after, action: 'Updated' });
                                             }, callbackTimer);
                                         }
-                                    
+
                                         // Append to Updated Items
                                         var item = { old: result.before, new: result.after, action: 'Updated' };
                                         itemsUpdated.push(item);
-                                        
-                                        if (bufferHistory > 0 && params.isHistoryNeeded && !isArray) { 
+
+                                        if (bufferHistory > 0 && params.isHistoryNeeded && !isArray) {
                                             itemFound = clone(item);
                                         }
                                     })
                                     .catch(function(err) { throw err; });
                             });
-                        
+
                         })
                         .then(function(){
                             // History
-                            if (bufferHistory > 0 && params.isHistoryNeeded) { 
+                            if (bufferHistory > 0 && params.isHistoryNeeded) {
                                 if (!isArray) {
-                                    addHistory({ item: clone(itemFound), old: clone(itemFound.old), 
+                                    addHistory({ item: clone(itemFound), old: clone(itemFound.old),
                                                   new: clone(itemFound.new), action: 'Updated', isArray: false });
                                 } else if (isArray) {
                                     addHistory({ item: clone(itemsUpdated), old: null, new: null, action: 'Updated', isArray: true });
                                 }
                             }
-                        
+
                         })
                         .then(function(){
                             resolve(itemsUpdated);
                         })
                         .catch(function(err) { throw err; });
-                    
-                    
+
+
 
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
                     reject(new Error( msg ));
                 }
-                
+
             });
-        
+
         },
 
         clone: function clone() {
@@ -10389,35 +10375,35 @@ cooldb = function cooldb() {
                 }
             });
         },
-        
+
         clean: function clean(params) {
-            
+
             return new Promise(function(resolve, reject) {
                 try {
-                    
+
                     params = params || {};
-                    
+
                     if (!params.hasOwnProperty('isHistoryNeeded'))
                         params.isHistoryNeeded = true;
-                    
+
                     var cdbTemp = null;
                     if (bufferHistory > 0)
                         cdbTemp = clone(cdb);
-                    
+
                     cdb = [];
-                    
+
                     // Change Feed
-                    if (changeFeedCB != undefined) { 
+                    if (changeFeedCB != undefined) {
                         setTimeout(function() {
-                            changeFeedCB({ old: null, new: null, action: 'Cleaned' }); 
+                            changeFeedCB({ old: null, new: null, action: 'Cleaned' });
                         }, callbackTimer);
                     }
-                    
+
                     // History
-                    if (bufferHistory > 0 && params.isHistoryNeeded) { 
+                    if (bufferHistory > 0 && params.isHistoryNeeded) {
                         addHistory({ item: cdbTemp, action: 'Cleaned', isArray: true });
                     }
-                    
+
                     // Resolve
                     resolve([{ old: null, new: null, action: 'Cleaned' }]);
                 } catch (err) {
@@ -10425,9 +10411,9 @@ cooldb = function cooldb() {
                     reject(new Error( msg ));
                 }
             });
-        
+
         },
-        
+
         setCbTimer: function setCbTimer(timer) {
             if (typeof timer === "number")
                 callbackTimer = timer;
@@ -10436,42 +10422,42 @@ cooldb = function cooldb() {
         },
 
         // >> History <<
-        
+
         changeFeedHistory: function changeFeedHistory(fn) {
-            
+
             // Validate it is a function
-            if (typeof fn === 'function') { 
-                changeFeedHCB = fn; 
+            if (typeof fn === 'function') {
+                changeFeedHCB = fn;
             } else {
                 throw 'Invalid change Feed History function.';
             }
-                
+
 		},
-        
+
         setBufferHistory: function setBufferHistory(buffer) {
             if (typeof buffer === "number")
                 bufferHistory = buffer;
             else
                 throw 'buffer should be numeric.';
         },
-        
+
         cleanHistory: function cleanHistory() {
-            
+
             return new Promise(function(resolve, reject) {
                 try {
-                    
+
                     cdbHistory = [];
-                    
+
                     var singleItem = { item: [{ old: null, new: null, action: 'Cleaned', hcuid: cuid() }],
                                    action: 'Cleaned',  hcuid: cuid() };
-                    
+
                     // Change Feed
-                    if (changeFeedHCB != undefined) { 
+                    if (changeFeedHCB != undefined) {
                         setTimeout(function() {
                             changeFeedHCB(singleItem);
                         }, callbackTimer);
                     }
-                    
+
                     // Resolve
                     resolve([{ old: null, new: null, action: 'Cleaned' }]);
                 } catch (err) {
@@ -10479,11 +10465,11 @@ cooldb = function cooldb() {
                     reject(new Error( msg ));
                 }
             });
-        
+
         },
-        
+
         history: function history() {
-            
+
             return new Promise(function(resolve, reject) {
                 try {
                     resolve(cdbHistory);
@@ -10492,12 +10478,12 @@ cooldb = function cooldb() {
                     reject(new Error( msg ));
                 }
             });
-            
+
             return this;
         },
-        
+
         undo: function undo(params) {
-            
+
             return new Promise(function(resolve, reject){
                 try {
                     // >> Validations <<
@@ -10505,14 +10491,14 @@ cooldb = function cooldb() {
                     // default param array
                     params          = params || {};
                     params.hicuid   = params.hicuid || null;
-                    
+
                     // item key prop
                     if (!params.hasOwnProperty('hcuid'))
                         throw 'Key => [hcuid] was not found.';
-                    
+
                     if (cdbHistory.length === 0)
                         throw 'The history is empty.';
-                    
+
                     var hItem = null;
                     if (params.hicuid === null) {
                         hItem = cdbHistory.filter(function(hitem){ return hitem.hcuid == params.hcuid;  });
@@ -10521,23 +10507,23 @@ cooldb = function cooldb() {
                                           [0].item
                                           .filter(function(hitem){ return hitem.hcuid == params.hicuid });
                     }
-                    
+
                     // Validate filter output
                     if (hItem.length == 0)
                         throw 'No history item found.';
-                    
+
                     // Standard Query for Array and Single Elements
                     hItem = hItem[0];
                     hItem = (hItem.hasOwnProperty('item')) ? hItem : { item: [hItem] };
-                    
+
                     hItem.item.forEach(function(item) {
                         // UNDO INSERT
                         if (item.action === 'Inserted') {
                             resolve(coolDB.del({ key: 'cuid', value: item.new.cuid, isHistoryNeeded: false })._result);
-                        } 
+                        }
                         // UNDO UPDATE
                         else if (item.action === 'Updated') {
-                            resolve(coolDB.update({ key: 'cuid', value: item.old.cuid,  
+                            resolve(coolDB.update({ key: 'cuid', value: item.old.cuid,
                                                     item : item.old,
                                                     isHistoryNeeded: false })._result);
                         }
@@ -10551,113 +10537,114 @@ cooldb = function cooldb() {
                             return;
                         }
                     });
-                    
+
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
                     reject(new Error( msg ));
                 }
             });
         },
-        
+
         // >> Ajax <<
-        
+
         postCuid: function postCuid(params) {
-            
+
             var $this = this;
-            
+
             return new Promise(function(resolve, reject) {
                 try {
-                    
+
                     params      = params || {};
                     params.json = params.json || false;
-                    
+
                     if (!params.hasOwnProperty('url'))
                         throw 'url property not found.';
-                    
+
                     if (!params.hasOwnProperty('cuid'))
                         throw 'cuid property not found.';
-                    
+
                     $this.get({ key: 'cuid', value: params.cuid })
                         .then(function(response){
-                        
+
                             if (response.count > 0) {
-                                
+
                                 var item = null;
                                 if (!params.json)
                                     item = clone( response.items[0] );
                                 else
                                     item = JSON.stringify(clone( response.items[0] ));
-                                
+
                                 axios.post(params.url, item)
                                      .then(function(success){ resolve(success); })
                                      .catch(function(err){ reject(err); });
-                                
+
                             } else {
                                 throw 'No item found for cuid [ ' + params.cuid + ' ]';
                             }
-                            
+
                         })
                         .catch(function(err){
                             reject(err);
                         });
-                    
+
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
                     reject(new Error( msg ));
                 }
             });
         },
-        
+
         getCuid: function getCuid(params) {
-            
+
             var $this = this;
-            
+
             return new Promise(function(resolve, reject) {
                 try {
-                    
+
                     params = params || {};
-                    
+
                     if (!params.hasOwnProperty('url'))
                         throw 'url property not found.';
-                    
+
                     if (!params.hasOwnProperty('cuid'))
                         throw 'cuid property not found.';
-                    
+
                     $this.get({ key: 'cuid', value: params.cuid })
                         .then(function(response){
-                        
+
                             if (response.count > 0) {
-                                
+
                                 var item = null;
                                 if (!params.json)
                                     item = clone( response.items[0] );
                                 else
                                     item = JSON.stringify(clone( response.items[0] ));
-                                
+
                                 axios.get(params.url, { params: item })
                                      .then(function(success){ resolve(success); })
                                      .catch(function(err){ reject(err); });
-                                
+
                             } else {
                                 throw 'No item found for cuid [ ' + params.cuid + ' ]';
                             }
-                            
+
                         })
                         .catch(function(err){
                             reject(err);
                         });
-                    
+
                 } catch (err) {
                     var msg = (err.hasOwnProperty('message')) ? err.message : err;
                     reject(new Error( msg ));
                 }
             });
         }
-        
+
     };
-    
+
 };
 
 module.exports = cooldb;
-}).call(this,require("ngpmcQ"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_9ee3cfe3.js","/")
-},{"axios":1,"buffer":18,"clone":15,"cuid":16,"es6-promise":17,"lazy.js":22,"ngpmcQ":21}]},{},[23])
+
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_527a6720.js","/")
+},{"axios":1,"buffer":18,"clone":15,"cuid":16,"es6-promise":17,"lazy.js":22,"oMfpAn":21}]},{},[23])

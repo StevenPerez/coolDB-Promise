@@ -79,7 +79,7 @@ coolDB.del({ key: 'name', value: 'Pacman' })
     .catch(function(err) {
         console.log(err);
     });
-    
+
 }, 500);
 */
 
@@ -97,7 +97,7 @@ console.log( coolDB.db()._result );
 /****************************************/
 
 // Views
-app.use(express(__dirname + 'views')); 
+app.use(express(__dirname + 'views'));
 app.set('view engine','html');
 app.engine('html', require('ejs').renderFile);
 
@@ -140,7 +140,7 @@ Routes.post('/create', function (req, res) {
 		Age: req.body.Age,
 		ID: people.length + 1
 	};
-	
+
 	people.push(item);
   	res.send(item);
 });
@@ -152,7 +152,7 @@ Routes.get('/create2', function (req, res) {
 		Age: req.query.Age,
 		ID: people.length + 1
 	};
-	
+
 	people.push(item);
   	res.send(item);
 });
@@ -187,20 +187,20 @@ function select(params) {
 Routes.post('/update', function (req, res) {
 	console.log(req.body);
 	var item = select({ ID: req.body.ID });
-	
+
 	item.Name 	= req.body.Name;
 	item.Age 	= parseInt(req.body.Age);
-	
+
   	res.send(people);
 });
 
 Routes.get('/update2', function (req, res) {
 	console.log(req.query);
 	var item = select({ ID: req.query.ID });
-	
+
 	item.Name 	= req.query.Name;
 	item.Age 	= parseInt(req.query.Age);
-	
+
   	res.send(people);
 });
 
