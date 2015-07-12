@@ -647,5 +647,5 @@ coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
 */
 
 /* ACTIVE GLOBAL LIBS */
-//coolDB.activeGlobalLibs({ libs: ['Axios', 'Clone', 'Cuid', 'Promise', 'Lazy'] });
+//coolDB.activeGlobalLibs({ libs: ['Axios', 'Clone', 'Cuid', 'jQuery', 'Lazy', 'Validate'] });
 //coolDB.activeGlobalLibs({ libs: ['All'] });

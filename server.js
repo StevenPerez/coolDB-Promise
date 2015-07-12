@@ -5,6 +5,9 @@ var app         = express();
 var cooldb 	    = require('./public/dist/node-cooldb.js'),
 	coolDB 		= cooldb();
 
+coolDB.activeGlobalLibs({ libs: ['Axios', 'Clone', 'Cuid', 'jQuery', 'Lazy', 'Validate'] });
+
+console.log(cuid());
 console.log(cooldb);
 
 /****************************************/

@@ -20102,6 +20102,8 @@ var cuid        = require('cuid'),
 
 cooldb = function cooldb() {
 
+  (this.hasOwnProperty('global')) ? global.Promise = Promise : window.Promise = Promise;
+  
   // Production Array
   var cdb             = [];
   // Production Change Feed
@@ -20928,7 +20930,6 @@ cooldb = function cooldb() {
               
             case 'all':
               {
-                (this.hasOwnProperty('global')) ? global.Promise = Promise : window.Promise = Promise;
                 (this.hasOwnProperty('global')) ? global.clone = clone : window.clone = clone;
                 (this.hasOwnProperty('global')) ? global.lazy = lazy : window.lazy = lazy;
                 (this.hasOwnProperty('global')) ? global.axios = axios : window.axios = axios;
@@ -20944,7 +20945,7 @@ cooldb = function cooldb() {
           }
 
         } else {
-          throw 'Library list available: ["All", "Axios", "Clone", "Cuid", "Promise", "Lazy", "Validate"]';
+          throw 'Library list available: ["All", "Axios", "Clone", "Cuid", "jQuery", "Lazy", "Validate"]';
         }
       });
 
@@ -20956,5 +20957,5 @@ cooldb = function cooldb() {
 
 module.exports = cooldb;
 
-}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_f98d3173.js","/")
+}).call(this,require("oMfpAn"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_dd0ef34c.js","/")
 },{"axios":1,"buffer":18,"clone":15,"cuid":16,"es6-promise":17,"jquery":22,"lazy.js":23,"oMfpAn":21,"validate.js":24}]},{},[25])

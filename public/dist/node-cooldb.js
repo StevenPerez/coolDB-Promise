@@ -11,6 +11,8 @@ var cuid        = require('cuid'),
 
 cooldb = function cooldb() {
 
+  (this.hasOwnProperty('global')) ? global.Promise = Promise : window.Promise = Promise;
+  
   // Production Array
   var cdb             = [];
   // Production Change Feed
@@ -837,7 +839,6 @@ cooldb = function cooldb() {
               
             case 'all':
               {
-                (this.hasOwnProperty('global')) ? global.Promise = Promise : window.Promise = Promise;
                 (this.hasOwnProperty('global')) ? global.clone = clone : window.clone = clone;
                 (this.hasOwnProperty('global')) ? global.lazy = lazy : window.lazy = lazy;
                 (this.hasOwnProperty('global')) ? global.axios = axios : window.axios = axios;
@@ -853,7 +854,7 @@ cooldb = function cooldb() {
           }
 
         } else {
-          throw 'Library list available: ["All", "Axios", "Clone", "Cuid", "Promise", "Lazy", "Validate"]';
+          throw 'Library list available: ["All", "Axios", "Clone", "Cuid", "jQuery", "Lazy", "Validate"]';
         }
       });
 
