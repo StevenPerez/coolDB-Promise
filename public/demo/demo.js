@@ -1,5 +1,7 @@
 var coolDb = cooldb,
-    coolDB = coolDb();
+    coolDB = coolDb({ libs: ['All'] });
+
+//coolDB.activeGlobalLibs({ libs:['All'] });
 
 coolDB.changeFeed(function(result){
     /*
@@ -602,7 +604,9 @@ coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
 /* AJAX */
 
 /* POST CUID */
+
 /*
+// Simple
 function postCuidDemo() {
 
     var itemCuid = coolDB.db()._result[0].cuid;
@@ -623,8 +627,31 @@ coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
         });
 */
 
+/*
+// Encrypted
+function postCuidEncryptedDemo() {
+
+    var itemCuid = coolDB.db()._result[0].cuid;
+
+    coolDB.postCuid({ url: '/postEncryptedUrl', cuid: itemCuid, json: false, encrypt: true })
+          .then(function(success){
+            console.log( success );
+          })
+          .catch(function(err){
+            console.log( err );
+          });
+}
+
+coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
+        .then(postCuidEncryptedDemo)
+        .catch(function(err){
+            console.log(err);
+        });
+*/
+
 /* GET CUID */
 /*
+// Simple
 function getCuidDemo() {
 
     var itemCuid = coolDB.db()._result[0].cuid;
@@ -646,6 +673,51 @@ coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
 
 */
 
+/*
+// Encrypted
+function getCuidEncryptedDemo() {
+
+    var itemCuid = coolDB.db()._result[0].cuid;
+
+    coolDB.getCuid({ url: '/getEncryptedUrl', cuid: itemCuid, json: false, encrypt: true })
+          .then(function(success){
+            console.log( success );
+          })
+          .catch(function(err){
+            console.log( err );
+          });
+}
+
+coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
+        .then(getCuidEncryptedDemo)
+        .catch(function(err){
+            console.log(err);
+        });
+*/
+
 /* ACTIVE GLOBAL LIBS */
 //coolDB.activeGlobalLibs({ libs: ['Axios', 'Clone', 'Cuid', 'jQuery', 'Lazy', 'Validate'] });
 //coolDB.activeGlobalLibs({ libs: ['All'] });
+
+/* ENCRYPT / DECRYPT */
+
+var people = [
+          { name: 'steven', age: 29, birthday: { month: 12, day:10, year:1903 }, salary: 12.25, today: new Date() },
+          { name: 'mochi', age: 27, birthday: { month: 12, day:11, year:1904 }, salary: 1125.35, today: new Date() }
+        ];
+
+var i, k;
+
+coolDB.encrypt({ item: people, seconds: 15 })
+  .then(function(res){
+    console.log(res);
+    i = res.item;
+    k = res.key;
+    return { item: res.item, key: res.key };
+  })
+  .then(function(encrypted){
+    console.log( coolDB.decrypt({ item: encrypted.item, key: encrypted.key })._result );
+  })
+  .catch(function(result) {
+    console.log( result );
+  });

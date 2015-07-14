@@ -213,9 +213,19 @@ Routes.post('/postUrl', function (req, res) {
     res.send('Item received -> ' + JSON.stringify(req.body));
 });
 
+Routes.post('/postEncryptedUrl', function (req, res) {
+    console.log(req.body);
+    res.send('Item received -> ' + JSON.stringify(req.body.item));
+});
+
 Routes.get('/getUrl', function (req, res) {
     console.log(req.query);
     res.send('Item received -> ' + JSON.stringify(req.query));
+});
+
+Routes.get('/getEncryptedUrl', function (req, res) {
+    console.log(req.query);
+    res.send('Item received -> ' + JSON.stringify(req.query.item));
 });
 
 app.use('/', Routes);

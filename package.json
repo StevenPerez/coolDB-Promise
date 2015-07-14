@@ -17,6 +17,7 @@
     "body-parser": "^1.10.1",
     "browserify": "^9.0.3",
     "clone": "^1.0.2",
+    "crypto-js": "^3.1.5",
     "cuid": "^1.2.4",
     "ejs": "^2.1.4",
     "express": "^4.11.0",

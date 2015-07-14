@@ -5,12 +5,21 @@ var cuid        = require('cuid'),
     lazy        = require('lazy.js'),
     clone       = require('clone'),
     axios       = require('axios'),
+    cryptojs    = require('crypto-js/aes'),
+    cryptoEnc   = require('crypto-js/enc-utf8'),
     validate    = require('validate.js'),
     jQuery      = require('jquery'),
     $           = jQuery;
 
-cooldb = function cooldb() {
-
+cooldb = function cooldb(gblParams) {
+  
+  // Global Libraries Activation
+  gblParams = gblParams || [];
+  if (!gblParams.hasOwnProperty('libs'))
+    gblParams.libs = [];
+  
+  activeGlobalLibs({ libs: gblParams.libs });
+  
   (this.hasOwnProperty('global')) ? global.Promise = Promise : window.Promise = Promise;
   
   // Production Array
@@ -24,7 +33,15 @@ cooldb = function cooldb() {
   var bufferHistory   = 0;
   // Callback time
   var callbackTimer   = 0;
-
+  
+  // Encrypt Secret
+  var secretHash = 'cic2engvj0003355cplghcw6i',
+      elapseTime = 10;
+  
+  random: function random(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  
   updateProps : function updateProps(source, dest) {
 
     return new Promise(function(resolve, reject){
@@ -148,7 +165,149 @@ cooldb = function cooldb() {
 
     return this;
   }
+  
+  activeGlobalLibs: function activeGlobalLibs(params) {
 
+    params = params || {};
+
+    if (!params.hasOwnProperty('libs'))
+      throw 'libs property not found.';
+
+    if (!Array.isArray(params.libs))
+      throw 'libs property should be an Array.';
+
+    params.libs.forEach(function (lib){
+      if (typeof lib === 'string') {
+
+        switch (lib.toString().toLowerCase()) {
+          case 'promise':
+            (this.hasOwnProperty('global')) ? global.Promise = Promise : window.Promise = Promise;
+            break;
+          case 'clone':
+            (this.hasOwnProperty('global')) ? global.clone = clone : window.clone = clone;
+            break;
+          case 'lazy':
+            (this.hasOwnProperty('global')) ? global.lazy = lazy : window.lazy = lazy;
+            break;
+          case 'axios':
+            (this.hasOwnProperty('global')) ? global.axios = axios : window.axios = axios;
+            break;
+          case 'cuid':
+            (this.hasOwnProperty('global')) ? global.cuid = cuid : window.cuid = cuid;
+            break;
+          case 'validate':
+            (this.hasOwnProperty('global')) ? global.validate = validate : window.validate = validate;
+            break;
+          case 'jquery':
+            {
+              (this.hasOwnProperty('global')) ? global.jQuery = jQuery : window.jQuery = jQuery;
+              (this.hasOwnProperty('global')) ? global.$ = $ : window.$ = $;
+            }
+            break;
+          case 'cryptojs':
+            {
+              (this.hasOwnProperty('global')) ? global.cryptojs = cryptojs : window.cryptojs = cryptojs;
+              (this.hasOwnProperty('global')) ? global.cryptoEnc = cryptoEnc : window.cryptoEnc = cryptoEnc;
+            }
+            break;
+
+          case 'all':
+            {
+              (this.hasOwnProperty('global')) ? global.clone = clone : window.clone = clone;
+              (this.hasOwnProperty('global')) ? global.lazy = lazy : window.lazy = lazy;
+              (this.hasOwnProperty('global')) ? global.axios = axios : window.axios = axios;
+              (this.hasOwnProperty('global')) ? global.cuid = cuid : window.cuid = cuid;
+              (this.hasOwnProperty('global')) ? global.validate = validate : window.validate = validate;
+              (this.hasOwnProperty('global')) ? global.jQuery = jQuery : window.jQuery = jQuery;
+              (this.hasOwnProperty('global')) ? global.$ = $ : window.$ = $;
+              (this.hasOwnProperty('global')) ? global.cryptojs = cryptojs : window.cryptojs = cryptojs;
+              (this.hasOwnProperty('global')) ? global.cryptoEnc = cryptoEnc : window.cryptoEnc = cryptoEnc;
+            }
+            break;
+
+          default:
+
+        }
+
+      } else {
+        throw 'Library list available: ["All", "Axios", "Clone", "Cuid", "jQuery", "Lazy", "Validate"]';
+      }
+    });
+
+  }
+  
+  encryptObject: function encryptObject(item, key){
+    
+    for (var prop in item) {
+
+      if (validate.isDate(item[prop]) || validate.isString(item[prop]) || validate.isNumber(item[prop])) {
+        var encrypted = cryptojs.encrypt(item[prop].toString(), key);
+        item[prop] = encrypted.toString();
+      }
+      
+      if (item !== null && typeof item === "object") {
+        encryptObject(item[prop], key);
+      }
+      
+    }
+    
+  }
+
+  decryptObject: function decryptObject(item, key){
+    
+    for (var prop in item) {
+
+      if (validate.isDate(item[prop]) || validate.isString(item[prop]) || validate.isNumber(item[prop])) {
+         var dencrypted = cryptojs.decrypt(item[prop], key);
+         var result     = dencrypted.toString(cryptoEnc);
+        
+         if ($.isNumeric(result)) {
+          item[prop] = parseFloat(result);
+         } else if (!isNaN(Date.parse(result))) {
+           item[prop] = new Date(result);
+         } else {
+           item[prop] = result;
+         }
+      }
+      
+      if (item !== null && typeof item === "object") {
+        decryptObject(item[prop], key);
+      }
+      
+    }
+    
+  }
+  
+  secretElapse: function secretElapse(params) {
+    
+    var elapse = 0;
+    
+    params = params || {};
+    
+    if (!params.hasOwnProperty('secret'))
+      throw 'secret property not found.';
+    
+    [44].forEach(function(num){
+      
+      var decrypSecretKey = cryptojs.decrypt(params.secret, secretHash);
+      var decrypted = '';
+      
+      try {
+        decrypted = decrypSecretKey.toString(cryptoEnc);
+      } catch(err) {
+        decrypted = '';
+      }
+      
+      if ($.isNumeric(decrypted)) {
+          elapse = parseFloat(decrypted);
+      }
+      
+    });
+    
+    return elapse;
+    
+  }
+  
   return {
 
     // >> Production <<
@@ -709,10 +868,12 @@ cooldb = function cooldb() {
       var $this = this;
 
       return new Promise(function(resolve, reject) {
+        
         try {
 
-          params      = params || {};
-          params.json = params.json || false;
+          params          = params         || {};
+          params.json     = params.json    || false;
+          params.encrypt  = params.encrypt || false;
 
           if (!params.hasOwnProperty('url'))
             throw 'url property not found.';
@@ -720,16 +881,33 @@ cooldb = function cooldb() {
           if (!params.hasOwnProperty('cuid'))
             throw 'cuid property not found.';
 
+          if (!params.hasOwnProperty('seconds'))
+            params.seconds = elapseTime;
+
+          if (!validate.isNumber(params.seconds))
+            throw 'seconds property should be numeric.';
+          
           $this.get({ key: 'cuid', value: params.cuid })
             .then(function(response){
 
             if (response.count > 0) {
 
               var item = null;
-              if (!params.json)
-                item = clone( response.items[0] );
-              else
-                item = JSON.stringify(clone( response.items[0] ));
+              if (!params.json) {
+                if (!params.encrypt) { 
+                  item = clone( response.items[0] );
+                } else {
+                  item = $this.encrypt({ item: response.items[0], seconds: params.seconds })._result;
+                }
+              }
+              else {
+                if (!params.encrypt) { 
+                  item = JSON.stringify(clone( response.items[0] ));
+                } else {
+                  item = JSON.stringify( $this.encrypt({ item: response.items[0], seconds: params.seconds })._result );
+                }
+                
+              }
 
               axios.post(params.url, item)
                 .then(function(success){ resolve(success); })
@@ -758,7 +936,9 @@ cooldb = function cooldb() {
       return new Promise(function(resolve, reject) {
         try {
 
-          params = params || {};
+          params          = params         || {};
+          params.json     = params.json    || false;
+          params.encrypt  = params.encrypt || false;
 
           if (!params.hasOwnProperty('url'))
             throw 'url property not found.';
@@ -766,16 +946,36 @@ cooldb = function cooldb() {
           if (!params.hasOwnProperty('cuid'))
             throw 'cuid property not found.';
 
+          if (!params.hasOwnProperty('seconds'))
+            params.seconds = elapseTime;
+
+          if (!validate.isNumber(params.seconds))
+            throw 'seconds property should be numeric.';
+          
           $this.get({ key: 'cuid', value: params.cuid })
             .then(function(response){
 
             if (response.count > 0) {
 
               var item = null;
-              if (!params.json)
-                item = clone( response.items[0] );
-              else
-                item = JSON.stringify(clone( response.items[0] ));
+              if (!params.json) {
+                
+                if (!params.encrypt) { 
+                  item = clone( response.items[0] );
+                } else {
+                  item = $this.encrypt({ item: response.items[0], seconds: params.seconds })._result;
+                }
+                
+              }
+              else {
+                
+                if (!params.encrypt) { 
+                  item = JSON.stringify(clone( response.items[0] ));
+                } else {
+                  item = JSON.stringify( $this.encrypt({ item: response.items[0], seconds: params.seconds })._result );
+                }
+                
+              }
 
               axios.get(params.url, { params: item })
                 .then(function(success){ resolve(success); })
@@ -797,69 +997,121 @@ cooldb = function cooldb() {
       });
     },
 
-    activeGlobalLibs: function activeGlobalLibs(params) {
+    // >> Global Libraries <<
+    
+    activeGlobalLibs: activeGlobalLibs,
+    
+    // >> Encrypt - Decrypt
+    
+    encrypt: function encrypt(params) {
+      var $this = this;
 
-      params = params || {};
+      return new Promise(function(resolve, reject) {
+        try {
 
-      if (!params.hasOwnProperty('libs'))
-        throw 'libs property not found.';
+          params        = params || {};
 
-      if (!Array.isArray(params.libs))
-        throw 'libs property should be an Array.';
+          if (!params.hasOwnProperty('item'))
+            throw 'item property not found.';
 
-      params.libs.forEach(function (lib){
-        if (typeof lib === 'string') {
+          if (!params.hasOwnProperty('seconds'))
+            params.seconds = elapseTime;
 
-          switch (lib.toString().toLowerCase()) {
-            case 'promise':
-              (this.hasOwnProperty('global')) ? global.Promise = Promise : window.Promise = Promise;
-              break;
-            case 'clone':
-              (this.hasOwnProperty('global')) ? global.clone = clone : window.clone = clone;
-              break;
-            case 'lazy':
-              (this.hasOwnProperty('global')) ? global.lazy = lazy : window.lazy = lazy;
-              break;
-            case 'axios':
-              (this.hasOwnProperty('global')) ? global.axios = axios : window.axios = axios;
-              break;
-            case 'cuid':
-              (this.hasOwnProperty('global')) ? global.cuid = cuid : window.cuid = cuid;
-              break;
-            case 'validate':
-              (this.hasOwnProperty('global')) ? global.validate = validate : window.validate = validate;
-              break;
-            case 'jquery':
-              {
-                (this.hasOwnProperty('global')) ? global.jQuery = jQuery : window.jQuery = jQuery;
-                (this.hasOwnProperty('global')) ? global.$ = $ : window.$ = $;
-              }
-              
-              break;
-              
-            case 'all':
-              {
-                (this.hasOwnProperty('global')) ? global.clone = clone : window.clone = clone;
-                (this.hasOwnProperty('global')) ? global.lazy = lazy : window.lazy = lazy;
-                (this.hasOwnProperty('global')) ? global.axios = axios : window.axios = axios;
-                (this.hasOwnProperty('global')) ? global.cuid = cuid : window.cuid = cuid;
-                (this.hasOwnProperty('global')) ? global.validate = validate : window.validate = validate;
-                (this.hasOwnProperty('global')) ? global.jQuery = jQuery : window.jQuery = jQuery;
-                (this.hasOwnProperty('global')) ? global.$ = $ : window.$ = $;
-              }
-              break;
-
-            default:
-
-          }
-
-        } else {
-          throw 'Library list available: ["All", "Axios", "Clone", "Cuid", "jQuery", "Lazy", "Validate"]';
+          if (!validate.isNumber(params.seconds))
+            throw 'seconds property should be numeric.';
+          
+          if (typeof params.item !== 'object' && !Array.isArray(params.item))
+            throw 'item property should be an Object or Array.';
+          
+          // Ensure array to be encrypted
+          var objEncrypted = (!Array.isArray(params.item)) ? [clone(params.item)] : clone(params.item);
+          
+          // Create the hash base on secret phrase
+          
+          var randomLatencyFrom     = Date.now(),
+              randomLatencyTo       = new Date().setSeconds(new Date().getSeconds() + params.seconds),
+              secretEncryptorStart  = cryptojs.encrypt(randomLatencyFrom.toString(), secretHash),
+              secretEncryptorEnd    = cryptojs.encrypt(randomLatencyTo.toString(), secretHash),
+              secretKeyStart        = secretEncryptorStart.toString(),
+              secretKeyEnd          = secretEncryptorEnd.toString(),
+              key                   = cuid() + cuid();
+          
+          // Encrypt all properties (not objects / arrays)
+          objEncrypted.forEach(function(item){
+            encryptObject(item, key);
+          });
+           
+          resolve({ 
+                    item: clone(objEncrypted), 
+                    key: secretEncryptorStart + key + secretKeyEnd, 
+                    count: objEncrypted.length 
+                  });
+          
+        } catch (err) {
+          var msg = (err.hasOwnProperty('message')) ? err.message : err;
+          reject(new Error( msg ));
         }
+        
       });
+      
+    },
+    
+    decrypt: function decrypt(params) {
+      var $this = this;
 
-    }
+      return new Promise(function(resolve, reject) {
+        try {
 
+          params        = params || {};
+
+          if (!params.hasOwnProperty('item'))
+            throw 'item property not found.';
+          
+          if (!params.hasOwnProperty('key'))
+            throw 'key property not found.';
+          
+          if (typeof params.item !== 'object' && !Array.isArray(params.item))
+            throw 'item property should be an Object or Array.';
+          
+          // Ensure Array to be analyzed
+          var objDecrypted  = (!Array.isArray(params.item)) ? [clone(params.item)] : clone(params.item),
+              startSecret   = lazy(params.key).first(44).value(),
+              endSecret     = lazy(params.key).last(44).value(),
+              key           = params.key.replace(startSecret, '').replace(endSecret, '');
+          
+          // Check agains internal secure key
+          var randomLatencyFrom     = secretElapse({ secret: startSecret }),
+              randomLatencyTo       = secretElapse({ secret: endSecret }),
+              currentTime           = parseFloat(Date.now().toString());
+          
+          // Check Elapse of Time
+          var isValid = ( (currentTime >= randomLatencyFrom) && (currentTime <= randomLatencyTo)) ? true : false;
+          if ( !isValid ) {
+            throw 'Invalid Key';
+          }
+          
+          // Decrypt all properties (not Objects / Arrays)
+          objDecrypted.forEach(function(item){
+            decryptObject(item, key);
+          });
+          
+          resolve({ 
+                    item: clone(objDecrypted), 
+                    key: startSecret + key + endSecret, 
+                    count: objDecrypted.length 
+                  });
+          
+        } catch (err) {
+          var msg = (err.hasOwnProperty('message')) ? err.message : err;
+          reject(new Error( msg ));
+        }
+        
+      });
+      
+    },
+    
+    random: random
+    
   };
 
 };
