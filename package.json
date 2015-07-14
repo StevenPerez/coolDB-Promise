@@ -6,6 +6,7 @@
   "dependencies": {
     "axios": "^0.5.4",
     "clone": "^1.0.2",
+    "crypto-js": "^3.1.5",
     "cuid": "^1.2.4",
     "es6-promise": "^2.1.1",
     "jquery": "^2.1.4",

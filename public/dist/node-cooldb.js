@@ -36,6 +36,7 @@ cooldb = function cooldb(gblParams) {
   
   // Encrypt Secret
   var secretHash = 'cic2engvj0003355cplghcw6i',
+      coverHash  = 'cic3bvqc800024i5cog79750v',
       elapseTime = 10;
   
   random: function random(min, max) {
@@ -1027,24 +1028,26 @@ cooldb = function cooldb(gblParams) {
           var objEncrypted = (!Array.isArray(params.item)) ? [clone(params.item)] : clone(params.item);
           
           // Create the hash base on secret phrase
-          
           var randomLatencyFrom     = Date.now(),
               randomLatencyTo       = new Date().setSeconds(new Date().getSeconds() + params.seconds),
               secretEncryptorStart  = cryptojs.encrypt(randomLatencyFrom.toString(), secretHash),
               secretEncryptorEnd    = cryptojs.encrypt(randomLatencyTo.toString(), secretHash),
               secretKeyStart        = secretEncryptorStart.toString(),
               secretKeyEnd          = secretEncryptorEnd.toString(),
-              key                   = cuid() + cuid();
+              key                   = secretKeyStart + cuid() + cuid() + secretKeyEnd;
           
           // Encrypt all properties (not objects / arrays)
           objEncrypted.forEach(function(item){
             encryptObject(item, key);
           });
            
+          var coverKey = cryptojs.encrypt(key, coverHash);
+          key = coverKey.toString();
+          
           resolve({ 
-                    item: clone(objEncrypted), 
-                    key: secretEncryptorStart + key + secretKeyEnd, 
-                    count: objEncrypted.length 
+                    item  : clone(objEncrypted), 
+                    key   : key, 
+                    count : objEncrypted.length 
                   });
           
         } catch (err) {
@@ -1073,12 +1076,14 @@ cooldb = function cooldb(gblParams) {
           if (typeof params.item !== 'object' && !Array.isArray(params.item))
             throw 'item property should be an Object or Array.';
           
+          var UncoverKey  = cryptojs.decrypt(params.key, coverHash),
+              key         = UncoverKey.toString(cryptoEnc);
+          
           // Ensure Array to be analyzed
           var objDecrypted  = (!Array.isArray(params.item)) ? [clone(params.item)] : clone(params.item),
-              startSecret   = lazy(params.key).first(44).value(),
-              endSecret     = lazy(params.key).last(44).value(),
-              key           = params.key.replace(startSecret, '').replace(endSecret, '');
-          
+              startSecret   = lazy(key).first(44).value(),
+              endSecret     = lazy(key).last(44).value();
+                    
           // Check agains internal secure key
           var randomLatencyFrom     = secretElapse({ secret: startSecret }),
               randomLatencyTo       = secretElapse({ secret: endSecret }),
@@ -1097,7 +1102,7 @@ cooldb = function cooldb(gblParams) {
           
           resolve({ 
                     item: clone(objDecrypted), 
-                    key: startSecret + key + endSecret, 
+                    key: params.key, 
                     count: objDecrypted.length 
                   });
           
