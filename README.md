@@ -36,7 +36,6 @@ coolDB.activeGlobalLibs({ libs: ['All'] });
 var cooldb = cooldb,
     coolDB = cooldb({ libs: ['All'] });
 ```
-<strong>Note:</strong> The compression was made using packer so the cooldb library has a size of 218kB (min).
 <br />
 # API
 <br />
