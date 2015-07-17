@@ -678,7 +678,7 @@ CoolDB-Promise provides an easy way to send items via post / get requests to the
 ### postCuid
 Ajax post request, send an internal non history item to the server by cuid.
 ```
-function postCuid({ url | cuid | json (default false) })
+function postCuid({ url | cuid | json (default false) | encrypt (default false) })
 returns: Ajax server response
 ```
 ``` javascript
@@ -707,7 +707,7 @@ coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
 ### getCuid
 Ajax get request, send an internal non history item to the server by cuid.
 ```
-function getCuid({ url | cuid | json (default false) })
+function getCuid({ url | cuid | json (default false) | encrypt (default false) })
 returns: Ajax server response
 ```
 ``` javascript
