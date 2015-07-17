@@ -733,3 +733,68 @@ coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
         });
 
 ```
+<br />
+## Crypto
+### encrypt
+It receives an Object || Array and then all the plain text properties will be encrypted, the output will contain: 
+'item' property: It is an array with the result of the encryption.
+'key'  property: Encrypted Hash created specially for the CoolDB-Promise decrypt method (by default, the generated hash is valid for 10 seconds, you can extend this hash time).
+'count' property: It is the length of the returned item property.
+```
+function encrypt({ item (Object || Array) | seconds (default 10 seconds) })
+returns: { item (Array) | key | count }
+```
+``` javascript
+// Example:
+var people = [
+  { name: 'steven', age: 29, birthday: { month: 12, day:10, year:1903 }, salary: 12.25, today: new Date() },
+  { name: 'mochi', age: 27, birthday: { month: 12, day:11, year:1904 }, salary: 1125.35, today: new Date() }
+];
+
+coolDB.encrypt({ item: people, seconds: 15 })
+  .then(function(res){
+    console.log(res); // { item, key, count }
+  })
+  .catch(function(err) {
+    console.log( err );
+  });
+
+```
+<br />
+### decrypt
+It receives an Encrypted Object || Array and then all the plain text properties will be decrypted, the output will contain: 
+'item' property: It is an array with the result of the decryption.
+'key'  property: Encrypted Hash created used for the CoolDB-Promise to decrypt the Object / Array.
+'count' property: It is the length of the returned item property.
+```
+function decrypt({ item (Object || Array) | key })
+returns: { item (Array) | key | count }
+```
+``` javascript
+// Example:
+var people = [
+  { 
+	name: 'PadAMJbAE4h/', 
+	age: 'dGVkX', 
+	birthday: { month: 'iOX0QLSDtnPadAM', day:'1+R/DBWo', year:'8N82m9Q' }, 
+	salary: '3OqybwJCp', 
+	today: 'sdGVkX1/IpPX'
+  },
+  { 
+	name: 'kX1/JiTNg0p', 
+	age: 'dGVkX', 
+	birthday: { month: 'iOX0QLSDtnPadAM', day:'1+R/DBWo', year:'8N82m9Q' }, 
+	salary: '3OqybwJCp', 
+	today: 'sdGVkX1/IpPX'
+  }
+];
+
+coolDB.decrypt({ item: people, key: 'U2FsdGVkX1/JiT1U7Bv2WZSMmKgANlKQ2bWFk1RF46dvYWko24DtUbHa136tgQ==' })
+  .then(function(res){
+    console.log(res); // { item, key, count }
+  })
+  .catch(function(err) {
+    console.log( err );
+  });
+
+```
