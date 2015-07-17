@@ -1,6 +1,6 @@
 {
   "name": "cooldb-promise",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "main": "index.js",
   "description": "CoolDB allows easy CRUD Array events using Promise.",
   "dependencies": {

@@ -700,7 +700,7 @@ coolDB.add({ item: [{ name: 'Jhon', age: 20 }, { name: 'Jane', age: 20 }] })
 //coolDB.activeGlobalLibs({ libs: ['All'] });
 
 /* ENCRYPT / DECRYPT */
-
+/*
 var people = [
           { name: 'steven', age: 29, birthday: { month: 12, day:10, year:1903 }, salary: 12.25, today: new Date() },
           { name: 'mochi', age: 27, birthday: { month: 12, day:11, year:1904 }, salary: 1125.35, today: new Date() }
@@ -721,3 +721,4 @@ coolDB.encrypt({ item: people, seconds: 15 })
   .catch(function(result) {
     console.log( result );
   });
+*/
