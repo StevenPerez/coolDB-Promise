@@ -23,16 +23,20 @@ var cooldb 	= require('cooldb-promise'),
 ```
 <br />
 #### CoolDB and Global Scope Libraries
-This library contains dependencies from the objects: Axios, Clone, Cuid and Lazy JS, in the other hand, it contains non-dependencies from the objects: jQuery and Validate. The reason why I did include all of those (dependencies & non-dependencies) objects, it is because most of the times I use those libraries and I would like to avoid to implement individual JS files which impacts the loading performance of the page. However, in order to use those libraries in a global scope, you will need to activate using a method included in the version 2.x, in this way, you can avoid library conflicts with just choose the libraries you would like to activate.
+This library contains dependencies from the objects: Axios, Clone, Cuid and Lazy JS, jQuery and Validate. The reason why I did include all of those libraries, it is because most of the time I use those libraries and I would like to avoid individual implementation files which impacts the loading performance of the page. However, in order to use those libraries in a global scope, you will need to activate using a method included in the version 2.x, in this way, you can avoid library conflicts with just choose the libraries you would like to activate.
 
 ``` javascript
 // Activate Individual Libraries
-coolDB.activeGlobalLibs({ libs: ['Axios', 'Clone', 'Cuid', 'jQuery', 'Lazy', 'Validate'] });
+coolDB.activeGlobalLibs({ libs: ['Axios', 'Clone', 'CryptoJs', 'Cuid', 'jQuery', 'Lazy', 'Validate'] });
 
 // Activate All Libraries
 coolDB.activeGlobalLibs({ libs: ['All'] });
+
+// Active Libraries During instantiation
+var cooldb = cooldb,
+    coolDB = cooldb({ libs: ['All'] });
 ```
-<strong>Note:</strong> The compression was made using packer so the cooldb library has a size of 150.8kb (min).
+<strong>Note:</strong> The compression was made using packer so the cooldb library has a size of 218kB (min).
 <br />
 # API
 <br />
